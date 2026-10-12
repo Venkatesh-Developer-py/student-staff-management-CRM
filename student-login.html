@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Login — Profenaa Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/portal.css">
+<link rel="icon" type="image/png" href="assets/img/icon-192.png">
+</head>
+<body>
+
+  <div class="auth-shell">
+    <div class="brand-panel tone-student">
+      <div class="blueprint-grid" aria-hidden="true"></div>
+      <div class="corner-mark tl" aria-hidden="true"></div>
+      <div class="corner-mark br" aria-hidden="true"></div>
+
+      <div class="brand-mark">PROFENAA <span class="accent">TECHNOLOGIES</span></div>
+
+      <div>
+        <div class="restricted-tag"><span class="bar"></span> CERTIFICATE PORTAL</div>
+        <div class="brand-copy">
+          <h1>Build your career with industry ready skills.</h1>
+          <p>Sign in to view, verify, and download certificates issued by Profenaa Technologies across all engineering disciplines.</p>
+        </div>
+
+        <div class="cube-wrap" aria-hidden="true">
+          <svg class="wire-cube" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M100 24 L172 62 L100 100 L28 62 Z" stroke="rgba(255,255,255,0.28)" stroke-width="1.4"/>
+            <path d="M28 62 L100 100 L100 178 L28 140 Z" stroke="rgba(255,255,255,0.28)" stroke-width="1.4"/>
+            <path d="M172 62 L100 100 L100 178 L172 140 Z" stroke="rgba(255,255,255,0.16)" stroke-width="1.4"/>
+            <circle cx="100" cy="100" r="4" fill="var(--crimson-light)"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="meta-inline">
+        <div>SHEET <b>01/01</b></div>
+        <div>SCALE <b>NTS</b></div>
+        <div>REV <b>A</b></div>
+      </div>
+    </div>
+
+    <div class="form-panel">
+      <div class="form-card">
+        <div class="card-frame">
+          <div class="corner-mark card-mark tl" aria-hidden="true"></div>
+          <div class="corner-mark card-mark tr" aria-hidden="true"></div>
+
+          <span class="eyebrow">Student Access</span>
+          <h2>Welcome back</h2>
+          <p class="subtext">Log in to access your certificates and dashboard.</p>
+
+          <p id="formError" class="form-error"></p>
+          <p id="resetSuccessNote" class="form-success">Your password was reset. Please login with your new password.</p>
+          <p id="sessionExpiredNote" class="form-error" style="display:none;"></p>
+
+          <form id="loginForm" novalidate>
+            <div class="field">
+              <label for="identifier">Email or Student ID</label>
+              <input type="text" id="identifier" placeholder="Email Id or Student ID" required>
+            </div>
+            <div class="field">
+              <label for="password">Password</label>
+              <div class="password-field-wrap">
+                <input type="password" id="password" placeholder="Your password" required>
+                <button type="button" class="show-toggle" data-toggle-for="password">Show</button>
+              </div>
+            </div>
+
+            <div class="field-inline-row">
+              <label class="checkbox-label"><input type="checkbox" id="rememberMe"> Remember me</label>
+              <a href="forgot-password.html" class="link-btn" style="text-decoration:none;">Forgot password?</a>
+            </div>
+
+            <button type="submit" id="loginBtn" class="btn btn-primary">LOGIN</button>
+          </form>
+
+          <p class="form-footer">New student? <a href="student-register.html">Register an account</a></p>
+          <p class="form-footer muted">Are you an administrator? <a href="admin-login.html"><b>Admin Login</b></a></p>
+
+          <div class="card-footer-strip">
+            <span>DOC PFT-AUTH-001</span>
+            <span>REV A</span>
+            <span>PROFENAA TECHNOLOGIES</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/student-login.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("reset") === "success") {
+      document.getElementById("resetSuccessNote").classList.add("show");
+    }
+    const reason = params.get("reason");
+    if (reason === "unverified_expired") {
+      const el = document.getElementById("sessionExpiredNote");
+      if (el) {
+        el.textContent = "Your session expired because activity was not confirmed within 5 minutes. Please login again.";
+        el.style.display = "block";
+      }
+    } else if (reason === "session_expired") {
+      const el = document.getElementById("sessionExpiredNote");
+      if (el) {
+        el.textContent = "Your session has expired. Please login again.";
+        el.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>

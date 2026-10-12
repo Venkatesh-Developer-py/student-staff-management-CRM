@@ -1,0 +1,29 @@
+/* CEO Updates (student page) - scoped to #sec-ceo-updates only */
+#sec-ceo-updates .ceo-update-list { display:flex; flex-direction:column; gap:20px; }
+#sec-ceo-updates .ceo-update-card { margin:0; }
+#sec-ceo-updates .ceo-card-top { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px; min-height:24px; }
+#sec-ceo-updates .ceo-card-tag { margin-left:auto; font-size:.72rem; font-weight:700; letter-spacing:.06em; color:var(--ink-soft, #6b7280); }
+#sec-ceo-updates .ceo-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:999px; font-size:.7rem; font-weight:700; letter-spacing:.05em; }
+#sec-ceo-updates .ceo-badge.new { background:var(--crimson, #b3122d); color:#fff; }
+#sec-ceo-updates .ceo-badge.recent { background:rgba(31,157,85,.12); color:#1f7a47; }
+#sec-ceo-updates .ceo-title { margin:0 0 12px; font-size:1.1rem; line-height:1.35; }
+#sec-ceo-updates .ceo-meta { display:flex; flex-wrap:wrap; gap:8px 24px; margin-bottom:16px; font-size:.88rem; font-weight:600; }
+#sec-ceo-updates .ceo-meta span { white-space:nowrap; }
+#sec-ceo-updates .ceo-block-label { margin:0 0 4px; font-size:.82rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-soft, #6b7280); }
+#sec-ceo-updates .ceo-text { margin:0 0 16px; font-size:.92rem; line-height:1.55; white-space:pre-line; }
+#sec-ceo-updates .ceo-notes { margin:0 0 16px; padding:10px 14px; background:rgba(245,166,35,.1); border-left:3px solid #f5a623; border-radius:6px; }
+#sec-ceo-updates .ceo-notes .ceo-text { margin:0; }
+#sec-ceo-updates .ceo-link-row { display:flex; align-items:stretch; gap:8px; margin-bottom:6px; }
+#sec-ceo-updates .ceo-link-box { flex:1; min-width:0; padding:10px 12px; border:1.5px solid var(--line, #e5e7eb); border-radius:var(--radius-sm, 8px); background:rgba(0,0,0,.02); font-size:.88rem; word-break:break-all; user-select:all; }
+#sec-ceo-updates .ceo-copy-btn { flex:0 0 auto; width:auto; white-space:nowrap; }
+#sec-ceo-updates .ceo-copy-msg { min-height:18px; margin:0 0 10px; font-size:.8rem; font-weight:600; color:#1f7a47; }
+#sec-ceo-updates .ceo-open-wrap { display:flex; justify-content:center; }
+#sec-ceo-updates .ceo-open-btn { width:auto; text-decoration:none; }
+#sec-ceo-updates .ceo-empty { text-align:center; padding:40px 16px; }
+#sec-ceo-updates .ceo-empty .ceo-empty-icon { font-size:2.4rem; margin-bottom:8px; }
+#sec-ceo-updates .ceo-empty h3 { margin:0 0 6px; }
+#sec-ceo-updates .ceo-empty p { margin:0; color:var(--ink-soft, #6b7280); font-size:.9rem; }
+@media (max-width:560px) {
+  #sec-ceo-updates .ceo-link-row { flex-direction:column; }
+  #sec-ceo-updates .ceo-copy-btn { width:100%; }
+}

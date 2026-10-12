@@ -1,0 +1,149 @@
+/* ==========================================================
+   Job Updates table — Actions column + row lines
+   Scoped to #adminJobUpdatesTable (ID selector beats generic
+   button / .btn rules, so no !important needed).
+   Presentation only — no JS / API / markup changes.
+   Load AFTER portal.css and meeting-updates-admin.css.
+   ========================================================== */
+
+/* ---------- Row separator lines (thin, light pink) ---------- */
+#adminJobUpdatesTable {
+  border-collapse: collapse;
+}
+#adminJobUpdatesTable thead th {
+  border-bottom: 1px solid #f4d3d9;
+}
+#adminJobUpdatesTable tbody td {
+  border-bottom: 1px solid #f7dde2;
+  vertical-align: middle;
+}
+#adminJobUpdatesTable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ---------- Actions column ---------- */
+/* Column wide enough for Edit + Unpublish + Delete (~280px) + cell padding.
+   width AND min-width, because min-width alone is ignored by some table layouts. */
+#adminJobUpdatesTable thead th:last-child,
+#adminJobUpdatesTable tbody td:last-child {
+  width: 340px;
+  min-width: 340px;
+  white-space: nowrap;
+}
+
+/* Whatever wraps the buttons (div / span / .actions / any class) is forced to
+   a single non-wrapping row. !important is used here ONLY to beat an existing
+   flex-wrap: wrap rule whose selector I can't see. */
+#adminJobUpdatesTable tbody td:last-child > *:not(button) {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 8px !important;
+  width: max-content;
+  max-width: none;
+}
+
+/* If the buttons are direct children of the cell instead (no wrapper),
+   keep them inline on one line with the same 8px gap. */
+#adminJobUpdatesTable tbody td:last-child > button {
+  flex: 0 0 auto;
+  margin-right: 8px;
+}
+#adminJobUpdatesTable tbody td:last-child > button:last-child {
+  margin-right: 0;
+}
+#adminJobUpdatesTable tbody td:last-child > *:not(button) > button {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+/* ---------- Shared button base (kills grey browser default) ---------- */
+#adminJobUpdatesTable tbody td:last-child button {
+  -webkit-appearance: none;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  margin: 0;
+  padding: 0 14px;
+  font-family: inherit;
+  font-size: .78rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  border-radius: 8px;
+  border: 1px solid #f3c6ce;
+  background: #fff;
+  background-image: none;
+  color: #8a1226;
+  box-shadow: none;
+  outline: none;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+#adminJobUpdatesTable tbody td:last-child button:focus-visible {
+  box-shadow: 0 0 0 3px rgba(179, 18, 45, .2);
+}
+
+/* ---------- Icons (CSS-drawn, so markup stays untouched).
+   Remove the ::before rules if your buttons already contain icons. ---------- */
+#adminJobUpdatesTable tbody td:last-child button::before {
+  content: "";
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+/* ---------- Edit ---------- */
+#adminJobUpdatesTable tbody td:last-child button:nth-of-type(1) {
+  background: #fff;
+  border-color: #f3c6ce;
+  color: #8a1226;
+}
+#adminJobUpdatesTable tbody td:last-child button:nth-of-type(1)::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a1226' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20l4-1 11-11-3-3L5 16z'/%3E%3C/svg%3E");
+}
+#adminJobUpdatesTable tbody td:last-child button:nth-of-type(1):hover {
+  background: #fff4f6;
+  border-color: #e8506a;
+}
+
+/* ---------- Unpublish ---------- */
+#adminJobUpdatesTable tbody td:last-child button:nth-of-type(2) {
+  background: #fff;
+  border-color: #e8506a;
+  color: #8a1226;
+}
+#adminJobUpdatesTable tbody td:last-child button:nth-of-type(2)::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='11' fill='%23e8344f'/%3E%3Crect x='6' y='10.5' width='12' height='3' rx='1.5' fill='%23fff'/%3E%3C/svg%3E");
+}
+#adminJobUpdatesTable tbody td:last-child button:nth-of-type(2):hover {
+  background: #fff4f6;
+}
+
+/* ---------- Delete ---------- */
+#adminJobUpdatesTable tbody td:last-child button:nth-of-type(3),
+#adminJobUpdatesTable tbody td:last-child button[class*="delete"],
+#adminJobUpdatesTable tbody td:last-child button[class*="danger"] {
+  background: #fde8ec;
+  border-color: #e8506a;
+  color: #9b1228;
+}
+#adminJobUpdatesTable tbody td:last-child button:nth-of-type(3)::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23c8102e'%3E%3Cpath d='M9 3h6l1 2h4v2H4V5h4zM6 9h12l-1 12H7z'/%3E%3C/svg%3E");
+}
+#adminJobUpdatesTable tbody td:last-child button:nth-of-type(3):hover {
+  background: #c8281e;
+  border-color: #c8281e;
+  color: #fff;
+}
+#adminJobUpdatesTable tbody td:last-child button:nth-of-type(3):hover::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M9 3h6l1 2h4v2H4V5h4zM6 9h12l-1 12H7z'/%3E%3C/svg%3E");
+}

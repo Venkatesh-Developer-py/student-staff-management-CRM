@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Login — Profenaa Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/portal.css">
+<link rel="icon" type="image/png" href="assets/img/icon-192.png">
+</head>
+<body>
+
+  <div class="auth-shell">
+    <div class="brand-panel">
+      <div class="blueprint-grid" aria-hidden="true"></div>
+      <div class="corner-mark tl" aria-hidden="true"></div>
+      <div class="corner-mark tr" aria-hidden="true"></div>
+
+      <div>
+        <div class="restricted-tag">RESTRICTED ACCESS</div>
+        <div class="brand-mark">PROFENAA TECHNOLOGIES</div>
+        <p class="subhead">Administrator Console</p>
+      </div>
+
+      <div class="meta-rows">
+        <div class="meta-row"><span>Portal</span><b>CMS / Admin</b></div>
+        <div class="meta-row"><span>Access Level</span><b>Clearance 02</b></div>
+        <div class="meta-row status"><span>Status</span><b><span class="status-dot"></span>Secure Channel</b></div>
+      </div>
+    </div>
+
+    <div class="form-panel">
+      <div class="form-card">
+        <div class="card-frame">
+          <div class="corner-mark card-mark tl" aria-hidden="true"></div>
+          <div class="corner-mark card-mark tr" aria-hidden="true"></div>
+
+          <div class="doc-tag">Profenaa Technologies · Sheet 01</div>
+          <h2>Admin / HOD Sign In</h2>
+          <p class="subtext">Authorized personnel only. Admins and HODs both sign in here.</p>
+
+          <p id="formError" class="form-error"></p>
+
+          <form id="adminLoginForm" novalidate>
+            <div class="field">
+              <label for="adminEmail">Work Email or HOD Login ID</label>
+              <input type="text" id="adminEmail" placeholder="admin@profenaatechnologies.com or hod.john" required>
+            </div>
+            <div class="field">
+              <label for="adminPassword">Password</label>
+              <div class="password-field-wrap">
+                <input type="password" id="adminPassword" placeholder="Your password" required>
+                <button type="button" class="show-toggle" data-toggle-for="adminPassword">Show</button>
+              </div>
+            </div>
+
+            <div class="field-inline-row" style="justify-content:flex-start;">
+              <label class="checkbox-label"><input type="checkbox" id="keepSignedIn" checked> Keep me signed in</label>
+            </div>
+
+            <button type="submit" id="adminLoginBtn" class="btn btn-primary">Sign in to Admin</button>
+          </form>
+
+          <p class="form-footer">Not an administrator? <a href="student-login.html">Go to student login</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/admin-login.js"></script>
+</body>
+</html>

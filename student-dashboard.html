@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Dashboard — Profenaa Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/student.css">
+<link rel="stylesheet" href="assets/css/ceo-updates.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="assets/img/icon-192.png">
+<link rel="apple-touch-icon" href="assets/img/icon-192.png">
+<meta name="theme-color" content="#b3122d">
+</head>
+<body>
+
+  <!-- Fixed Profile Icon on Top-Right -->
+  <div class="fixed-top-profile-badge" id="fixedTopProfileBtn" title="Click to view Student Profile">
+    <div class="profile-avatar-bubble">
+      <span id="fixedProfileAvatarText">S</span>
+      <img id="fixedProfileAvatarImg" src="" style="width:100%; height:100%; object-fit:cover; display:none;" alt="Student">
+    </div>
+    <div class="profile-avatar-meta">
+      <span class="profile-name-text" id="fixedProfileName">Student</span>
+      <span class="profile-role-text">My Profile 👤</span>
+    </div>
+  </div>
+
+  <div class="student-shell">
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <aside class="student-sidebar" id="studentSidebar">
+      <div class="student-brand">
+        <img class="logo-chip" src="assets/logo/Logo.png" alt="Profenaa Logo">
+        <b>PROFENAA GROUPS</b>
+      </div>
+
+      <button class="side-nav-item active" data-section="sec-dashboard"><span class="nav-icon">🏠</span> Dashboard</button>
+      <button class="side-nav-item" data-section="sec-attendance"><span class="nav-icon">🗓️</span> Attendance</button>
+      <button class="side-nav-item" data-section="sec-activity"><span class="nav-icon">🔐</span> Login &amp; Activity</button>
+      <button class="side-nav-item" data-section="sec-leave"><span class="nav-icon">📝</span> Leave Request</button>
+      <button class="side-nav-item" data-section="sec-projects"><span class="nav-icon">💻</span> My Projects</button>
+      <button class="side-nav-item" data-section="sec-notifications"><span class="nav-icon">🔔</span> Notifications <span class="side-nav-badge" data-notif-badge style="display:none;"></span></button>
+      <button class="side-nav-item" data-section="sec-certificates"><span class="nav-icon">🎓</span> Certificates</button>
+      <button class="side-nav-item" data-section="sec-placement"><span class="nav-icon">💼</span> Placement</button>
+      <button class="side-nav-item" data-section="sec-career-guidance"><span class="nav-icon">🎯</span> Career Guidance</button>
+      <button class="side-nav-item" data-section="sec-mock-interviews"><span class="nav-icon">🎤</span> Mock Interviews</button>
+      
+      <button class="side-nav-item" data-section="sec-referral"><span class="nav-icon">🎁</span> Refer a Friend</button>
+      <button class="side-nav-item" data-section="sec-job-updates"><span class="nav-icon">💼</span>Recent Job Updates</button>
+      <button class="side-nav-item" data-section="sec-ceo-updates"><span class="nav-icon">📢</span> CEO Sessions</button>
+
+      <div class="side-nav-divider"></div>
+      <button class="side-nav-item logout-item" id="logoutBtn"><span class="nav-icon">🚪</span> Logout</button>
+    </aside>
+
+    <div>
+      <div class="student-topbar">
+        <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Open menu">☰</button>
+        <h2>Welcome, <span id="welcomeName">Student</span></h2>
+        <div style="margin-left:auto; display:flex; align-items:center; gap:12px;">
+          <div class="topbar-avatar" id="topbarAvatar" style="width:36px; height:36px; border-radius:50%; background:var(--crimson); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.88rem; cursor:pointer; overflow:hidden;" title="View My Profile">
+            <span id="topbarAvatarText">S</span>
+            <img id="topbarAvatarImg" src="" style="width:100%; height:100%; object-fit:cover; display:none;" alt="Profile">
+          </div>
+        </div>
+      </div>
+
+      <main class="student-main">
+
+        <!-- =============== DASHBOARD =============== -->
+        <section id="sec-dashboard" class="student-section active">
+          <div class="page-header">
+            <h2>Welcome, <span id="dashWelcomeName">Student</span></h2>
+            <p>Here's a snapshot of your training progress.</p>
+          </div>
+
+          <div class="summary-cards-grid top-summary-grid" id="summaryCards">
+            <div class="summary-card">
+              <div class="sc-label">Attendance</div>
+              <div class="sc-value" id="cardAttendance">—</div>
+            </div>
+            <div class="summary-card">
+              <div class="sc-label">Login Status</div>
+              <div class="sc-value" id="cardLoginStatus">—</div>
+            </div>
+            <div class="summary-card" id="cardWorkingHoursWrap">
+              <div class="sc-label">Today's Working Hours</div>
+              <div class="sc-value" id="cardWorkingHours">—</div>
+              <div class="sc-sub" id="cardWorkingHoursSub"></div>
+            </div>
+            <div class="summary-card">
+              <div class="sc-label">Projects Allocated</div>
+              <div class="sc-value" id="cardProjects">—</div>
+            </div>
+            <div class="summary-card" id="cardCertificationWrap">
+              <div class="sc-label">Certification Status</div>
+              <div class="sc-value" id="cardCertification">—</div>
+            </div>
+            <div class="summary-card">
+              <div class="sc-label">Placement Applications</div>
+              <div class="sc-value" id="cardPlacement">—</div>
+            </div>
+            <div class="summary-card">
+              <div class="sc-label">Mock Interview Score</div>
+              <div class="sc-value" id="cardMockScore">—</div>
+            </div>
+          </div>
+
+          <!-- Performance section: static markup, part of the Dashboard itself
+               (the standalone Performance page has been removed - there is no
+               separate Performance sidebar item, this IS where students see
+               it). Tabs/chart/PEST panel are all driven by assets/js/performance.js;
+               only the 5 old metric cards and the working-hour compliance
+               panel are intentionally left out here per the current design. -->
+          <section id="dashboardPerformanceMount" class="dash-performance" aria-label="Your Performance">
+            <div class="page-header">
+              <h2>Your Performance</h2>
+              <p>A snapshot of your Attendance, Projects, Placement activity and Mock Interview performance.</p>
+            </div>
+
+            <div class="perf-tab-row" id="perfTabRow" role="tablist">
+              <button type="button" class="perf-tab active" data-period="this_month" role="tab" aria-selected="true">This Month</button>
+              <button type="button" class="perf-tab" data-period="previous_month" role="tab" aria-selected="false">Previous Month</button>
+              <button type="button" class="perf-tab" data-period="overall" role="tab" aria-selected="false">Overall</button>
+            </div>
+
+            <div class="panel-card">
+              <h3 id="perfChartHeading">Performance Overview — This Month</h3>
+              <div id="perfChartArea" class="perf-chart-area">
+                <p style="color:var(--ink-soft); font-size:.88rem; margin:0;">Loading…</p>
+              </div>
+            </div>
+
+            <details class="legacy-pest-panel" style="margin-top:20px;">
+              <summary>View Your PEST Skill-Test Results</summary>
+              <div class="panel-card" style="margin-top:16px; border:none; padding:0; box-shadow:none;">
+                <div class="data-table-wrap">
+                  <table class="data-table" id="performanceTable">
+                    <thead><tr><th>Department</th><th>Score</th><th>Correct / Total</th><th>Attempted On</th></tr></thead>
+                    <tbody><tr class="empty-row"><td colspan="4">Loading…</td></tr></tbody>
+                  </table>
+                </div>
+              </div>
+            </details>
+          </section>
+
+          <div class="panel-card">
+            <h3>Recent Activity</h3>
+            <ul class="activity-feed" id="recentActivityFeed">
+              <li class="activity-item"><span class="activity-time">-</span><span class="activity-text">Loading…</span></li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- =============== PROFILE DASHBOARD =============== -->
+        <section id="sec-profile" class="student-section">
+          <div class="page-header">
+            <h2>Student Profile Dashboard</h2>
+            <p>Manage your professional identity, track profile completion progress, and customize your course path.</p>
+          </div>
+
+          <!-- Hero Identity Card with Photo Upload -->
+          <div class="profile-hero-card">
+            <div class="profile-hero-content">
+              <div class="profile-photo-container">
+                <div class="profile-photo-wrap" id="profilePhotoWrap">
+                  <img id="profilePhotoImg" class="profile-photo-img" src="" alt="Profile Photo" style="display:none;">
+                  <div id="profilePhotoFallback" class="profile-photo-fallback">S</div>
+                </div>
+                <label for="profilePhotoInput" class="profile-photo-upload-btn" title="Upload Profile Photo">
+                  📷
+                </label>
+                <input type="file" id="profilePhotoInput" accept="image/*" style="display:none;">
+              </div>
+              <div class="profile-hero-details">
+                <h2 id="profileHeroName">Student Name</h2>
+                <div class="profile-hero-tags">
+                  <span class="profile-tag" id="profileHeroId">PFT-000</span>
+                  <span class="profile-tag branch" id="profileHeroBranch">Branch: Kinathukadavu</span>
+                  <span class="profile-tag" id="profileHeroCourse">Course Name</span>
+                  <span class="profile-tag" id="profileHeroCertBadge" style="background:#1f9d55;">Pending</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Professional Photo Notice Banner -->
+          <div class="profile-notice-banner">
+            <div class="profile-notice-icon">📢</div>
+            <div class="profile-notice-text">
+              <b>Professional Photo Notice:</b> Please upload a professional passport-style photo for your profile, verification, and certificate records.
+            </div>
+          </div>
+
+          <!-- Profile Progress Bar Card -->
+          <div class="profile-progress-card">
+            <div class="profile-progress-header">
+              <div>
+                <h3>Profile Completion Progress</h3>
+                <p>Complete each milestone below to reach 100% and prepare for your certificate issuance.</p>
+              </div>
+              <div class="profile-progress-pct" id="profileProgressPercentText">20%</div>
+            </div>
+            <div class="profile-progress-bar-wrap">
+              <div class="profile-progress-bar-fill" id="profileProgressBarFill" style="width:20%;"></div>
+            </div>
+
+            <!-- 5 Steps Milestone Grid -->
+            <div class="profile-steps-grid">
+              <div class="profile-step-item done" id="stepRegistration">
+                <div class="profile-step-icon">✓</div>
+                <div class="profile-step-info">
+                  <div class="profile-step-title">1. Account Created</div>
+                  <div class="profile-step-weight">Base 20% · Completed</div>
+                </div>
+              </div>
+
+              <div class="profile-step-item" id="stepResume">
+                <div class="profile-step-icon" id="stepResumeIcon">📄</div>
+                <div class="profile-step-info">
+                  <div class="profile-step-title">2. Resume Upload</div>
+                  <div class="profile-step-weight" id="stepResumeWeight">+15% · Pending</div>
+                </div>
+              </div>
+
+              <div class="profile-step-item" id="stepProfiles">
+                <div class="profile-step-icon" id="stepProfilesIcon">🌐</div>
+                <div class="profile-step-info">
+                  <div class="profile-step-title">3. Job Profiles</div>
+                  <div class="profile-step-weight" id="stepProfilesWeight">+15% · LinkedIn / Naukri</div>
+                </div>
+              </div>
+
+              <div class="profile-step-item" id="stepCompanies">
+                <div class="profile-step-icon" id="stepCompaniesIcon">🏢</div>
+                <div class="profile-step-info">
+                  <div class="profile-step-title">4. Applied Companies</div>
+                  <div class="profile-step-weight" id="stepCompaniesWeight">+30% · Total 80%</div>
+                </div>
+              </div>
+
+              <div class="profile-step-item" id="stepProjects">
+                <div class="profile-step-icon" id="stepProjectsIcon">💻</div>
+                <div class="profile-step-info">
+                  <div class="profile-step-title">5. 3 Projects Done</div>
+                  <div class="profile-step-weight" id="stepProjectsWeight">+20% · Total 100%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Common Details Card -->
+          <div class="panel-card" style="margin-bottom:20px;">
+            <h3>Personal &amp; Enrollment Details</h3>
+            <div class="info-grid">
+              <div class="info-item"><span class="info-label">Full Name</span><b id="profileDetailName">-</b></div>
+              <div class="info-item"><span class="info-label">Student ID</span><b id="profileDetailStudentId">-</b></div>
+              <div class="info-item"><span class="info-label">Email Address</span><b id="profileDetailEmail">-</b></div>
+              <div class="info-item"><span class="info-label">Phone Number</span><b id="profileDetailPhone">-</b></div>
+              <div class="info-item"><span class="info-label">Department</span><b id="profileDetailDepartment">-</b></div>
+              <div class="info-item"><span class="info-label">Branch</span><b id="profileDetailBranch">-</b></div>
+              <div class="info-item"><span class="info-label">Date of Join</span><b id="profileDetailJoinDate">-</b></div>
+              <div class="info-item"><span class="info-label">College Name</span><b id="profileDetailCollegeName">-</b></div>
+              <div class="info-item"><span class="info-label">College Dates</span><b id="profileDetailCollegeDates">-</b></div>
+              <div class="info-item"><span class="info-label">Internship Certificate(Infotech/Automation)</span><b id="profileDetailInternship">-</b></div>
+              <div class="info-item"><span class="info-label">Experience Certificate(Infotech/Automation)</span><b id="profileDetailExperience">-</b></div>
+              <div class="info-item"><span class="info-label">Certificate Status</span><b id="profileDetailCertStatus">-</b></div>
+              <div class="info-item"><span class="info-label">Certificate Issued Date</span><b id="profileDetailCertDate">-</b></div>
+            </div>
+          </div>
+
+          <!-- Academic & Certificate Preferences Card -->
+          <div class="panel-card" style="margin-bottom:20px;">
+            <h3>Academic &amp; Certificate Details</h3>
+            <p style="color:var(--ink-soft); font-size:.88rem; margin:0 0 16px;">
+              Manage your college name, academic session dates, and certificate requirements.
+            </p>
+            <p id="profileDetailsFormSuccess" class="form-success" style="display:none;"></p>
+            <p id="profileDetailsFormError" class="form-error" style="display:none;"></p>
+            <form id="profileDetailsForm" novalidate>
+              <div class="field">
+                <label for="profileCollegeNameInput">College Name</label>
+                <input type="text" id="profileCollegeNameInput" placeholder="e.g. Government Engineering College" maxlength="200">
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="profileCollegeStartDateInput">College Start Date &amp; Year</label>
+                  <input type="date" id="profileCollegeStartDateInput">
+                </div>
+                <div class="field">
+                  <label for="profileCollegeEndDateInput">College Ending Date &amp; Year</label>
+                  <input type="date" id="profileCollegeEndDateInput">
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="profileInternshipReqSelect">Internship Certificate(Infotech/Automation)</label>
+                  <select id="profileInternshipReqSelect">
+                    <option value="false">Not Required</option>
+                    <option value="true">Required</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field-row" id="profileInternshipDatesWrap">
+                <div class="field">
+                  <label for="profileInternshipStartDateInput">Internship Start Date</label>
+                  <input type="date" id="profileInternshipStartDateInput">
+                </div>
+                <div class="field">
+                  <label for="profileInternshipEndDateInput">Internship End Date</label>
+                  <input type="date" id="profileInternshipEndDateInput">
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="profileExperienceReqSelect">Experience Certificate(Infotech/Automation)</label>
+                  <select id="profileExperienceReqSelect">
+                    <option value="false">Not Required</option>
+                    <option value="true">Required</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field-row" id="profileExperienceDatesWrap">
+                <div class="field">
+                  <label for="profileExperienceStartDateInput">Experience Start Date</label>
+                  <input type="date" id="profileExperienceStartDateInput">
+                </div>
+                <div class="field">
+                  <label for="profileExperienceEndDateInput">Experience End Date</label>
+                  <input type="date" id="profileExperienceEndDateInput">
+                </div>
+              </div>
+              <div style="margin-top:16px; display:flex; justify-content:flex-end;">
+                <button type="submit" id="profileSaveDetailsBtn" class="btn btn-primary" style="width:auto; min-width:180px;">Save Profile Details</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Course & Dynamic Reallocation Card -->
+          <div class="panel-card">
+            <h3>Course &amp; Project Track Specialization</h3>
+            <p style="color:var(--ink-soft); font-size:.88rem; margin:0 0 16px;">
+              Select your course specialization for your registered department below. Choosing your course allocates your 3 tiered difficulty projects and configures your 20-question Mock Interview quiz.
+            </p>
+            <div class="field-row" style="align-items:flex-end;">
+              <div class="field" style="flex:2;">
+                <label for="profileCourseSelect">Registered Course Specialization</label>
+                <select id="profileCourseSelect" required>
+                  <option value="">Select your course specialization</option>
+                </select>
+              </div>
+              <div class="field" style="flex:1;">
+                <button type="button" id="profileUpdateCourseBtn" class="btn btn-primary" style="width:100%;">Confirm Course</button>
+              </div>
+            </div>
+            <div id="profileCourseLockedNotice" style="display:none; margin-top:12px; padding:8px 12px; background:rgba(224, 43, 84, 0.08); border-left:3px solid var(--crimson, #e02b54); border-radius:4px; font-size:.85rem; font-weight:600; color:var(--crimson, #e02b54);">
+              🔒 Course Specialization Confirmed &amp; Locked. Once selected, your course cannot be modified.
+            </div>
+          </div>
+        </section>
+
+        <!-- =============== ATTENDANCE =============== -->
+        <section id="sec-attendance" class="student-section">
+          <div class="page-header">
+            <h2>Attendance Overview</h2>
+            <p>Your physical/official training attendance record.</p>
+          </div>
+
+          <div class="attendance-stats-grid" id="attendanceStats">
+            <div class="summary-card accent-crimson"><div class="sc-label">Overall Attendance</div><div class="sc-value" id="attOverall">—</div></div>
+            <div class="summary-card accent-good"><div class="sc-label">Present</div><div class="sc-value" id="attPresent">—</div></div>
+            <div class="summary-card"><div class="sc-label">Absent</div><div class="sc-value" id="attAbsent">—</div></div>
+          </div>
+
+          <div class="panel-card" style="margin-bottom:20px;">
+            <h3>Monthly Attendance</h3>
+            <div class="monthly-attendance-list" id="monthlyAttendanceList"></div>
+          </div>
+
+          <div class="panel-card">
+            <h3>Date-wise History</h3>
+            <div class="data-table-wrap">
+              <table class="data-table" id="attendanceHistoryTable">
+                <thead><tr><th>Date</th><th>Status</th></tr></thead>
+                <tbody><tr class="empty-row"><td colspan="2">Loading…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =============== LOGIN & ACTIVITY =============== -->
+        <section id="sec-activity" class="student-section">
+          <div class="page-header">
+            <h2>Login &amp; Activity</h2>
+            <p>Your own website login history. This is separate from your attendance record.</p>
+          </div>
+
+          <div class="panel-card">
+            <h3>Login History</h3>
+            <div class="data-table-wrap">
+              <table class="data-table" id="sessionHistoryTable">
+                <thead><tr><th>Login Time</th><th>Logout Time</th><th>Duration</th><th>Status</th></tr></thead>
+                <tbody><tr class="empty-row"><td colspan="4">Loading…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =============== LEAVE REQUEST =============== -->
+        <section id="sec-leave" class="student-section">
+          <div class="page-header"><h2>Leave Request</h2><p>Submit and track your leave requests.</p></div>
+
+          <div class="panel-card" style="margin-bottom:20px;">
+            <h3>Submit a New Request</h3>
+            <p id="leaveFormError" class="form-error"></p>
+            <p id="leaveFormSuccess" class="form-success">Leave request submitted. It's now pending admin review.</p>
+
+            <form id="leaveForm" novalidate>
+              <div class="field">
+                <label for="leaveType">Leave Type</label>
+                <select id="leaveType" required>
+                  <option value="">Select leave type</option>
+                  <option value="PERSONAL">Personal</option>
+                  <option value="MEDICAL">Medical</option>
+                  <option value="OTHER">Other</option>
+                </select>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label for="leaveFromDate">From Date</label>
+                  <input type="date" id="leaveFromDate" required>
+                </div>
+                <div class="field">
+                  <label for="leaveToDate">To Date</label>
+                  <input type="date" id="leaveToDate" required>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="leaveReason">Reason</label>
+                <textarea id="leaveReason" rows="3" maxlength="500"
+                  style="width:100%; font-family:inherit; font-size:.96rem; padding:12px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--line); resize:vertical;"
+                  placeholder="Briefly explain the reason for your leave" required></textarea>
+              </div>
+
+              <button type="submit" id="submitLeaveBtn" class="btn btn-primary">Submit Request</button>
+            </form>
+          </div>
+
+          <div class="panel-card">
+            <h3>Leave History</h3>
+            <div class="data-table-wrap">
+              <table class="data-table" id="leaveHistoryTable">
+                <thead><tr><th>Dates</th><th>Type</th><th>Reason</th><th>Submitted</th><th>Status</th></tr></thead>
+                <tbody><tr class="empty-row"><td colspan="5">Loading…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =============== MY PROJECTS (Project Journey) =============== -->
+        <section id="sec-projects" class="student-section" aria-labelledby="projectJourneyHeading">
+          <div class="page-header">
+            <h2 id="projectJourneyHeading">My Project Journey</h2>
+            <p>Turn what you learn into real-world projects. Complete each project, submit your work, and build your development skills step by step.</p>
+          </div>
+          <div id="projectJourneySummary" class="project-journey-summary" style="display:none;">
+            <span class="pjs-label">Project Journey</span>
+            <span class="pjs-count" id="projectJourneyCount">0 / 3 Completed</span>
+          </div>
+          <div id="projectsGrid" class="project-journey" role="list" aria-live="polite" aria-label="Your assigned projects">
+            <p style="color:var(--ink-soft); font-size:.88rem; margin:0;">Loading your project journey…</p>
+          </div>
+        </section>
+
+        <!-- =============== NOTIFICATIONS =============== -->
+        <section id="sec-notifications" class="student-section">
+          <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap;">
+            <div>
+              <h2>Notifications</h2>
+              <p>Updates about your leaves, projects, and certificates.</p>
+            </div>
+            <button id="markAllReadBtn" class="btn btn-outline btn-sm" style="flex:0 0 auto;">Mark all as read</button>
+          </div>
+          <div class="panel-card">
+            <div id="notifList" class="notif-list">
+              <p style="color:var(--ink-soft); margin:0;">Loading…</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- =============== CERTIFICATES (existing functionality, unchanged) =============== -->
+        <section id="sec-certificates" class="student-section">
+          <div class="page-header"><h2>Certificates</h2><p>View and download your issued certificate.</p></div>
+
+          <div class="panel-card">
+            <h3>Your Certificate</h3>
+            <div id="certStatusBadge" class="cert-status-badge pending">● Pending</div>
+
+            <div id="certActions" class="cert-actions" style="display:none;">
+              <a id="viewCertBtn" href="#" class="btn btn-outline">View Certificate</a>
+              <a id="downloadCertBtn" href="#" class="btn btn-primary">Download Certificate</a>
+            </div>
+
+            <p id="emptyCertNote" class="empty-cert-note">
+              Your certificate is currently being processed by the Profenaa GROUPS team.
+              You'll be able to view and download it here as soon as it's issued.
+            </p>
+          </div>
+
+          <div class="panel-card" style="margin-top:20px;">
+            <h3>Your Details</h3>
+            <div class="detail-row"><span>Student ID</span><span id="detailStudentId">-</span></div>
+            <div class="detail-row"><span>Email</span><span id="detailEmail">-</span></div>
+            <div class="detail-row"><span>Phone</span><span id="detailPhone">-</span></div>
+            <div class="detail-row"><span>Course</span><span id="detailCourse">-</span></div>
+            <div class="detail-row"><span>Date of Join</span><span id="detailJoin">-</span></div>
+          </div>
+        </section>
+
+        <!-- =============== PLACEMENT =============== -->
+        <section id="sec-placement" class="student-section">
+          <div class="page-header">
+            <h2>Placement</h2>
+            <p>Track your job applications, resume and professional profiles in one place.</p>
+          </div>
+
+          <!-- Student Placement Profile (read-only, auto-loaded from the
+               existing student profile - not a second registration form) -->
+          <div class="panel-card" style="margin-bottom:20px;">
+            <h3>Student Placement Profile</h3>
+            <div class="detail-row"><span>Name</span><span id="placementDetailName">-</span></div>
+            <div class="detail-row"><span>Student ID</span><span id="placementDetailStudentId">-</span></div>
+            <div class="detail-row"><span>Email</span><span id="placementDetailEmail">-</span></div>
+            <div class="detail-row"><span>Phone</span><span id="placementDetailPhone">-</span></div>
+            <div class="detail-row"><span>Course</span><span id="placementDetailCourse">-</span></div>
+            <div class="detail-row"><span>Date of Join</span><span id="placementDetailJoin">-</span></div>
+          </div>
+
+          <!-- Resume — DOC/DOCX direct upload only, no PDF, no Drive links -->
+          <div class="panel-card" style="margin-bottom:20px;">
+            <h3>Resume</h3>
+            <div id="placementResumeStatusBadge" class="cert-status-badge pending">● No resume uploaded yet</div>
+            <p id="placementResumeError" class="form-error"></p>
+            <p id="placementResumeSuccess" class="form-success"></p>
+            <div class="placement-upload-row">
+              <button type="button" id="placementResumeChooseBtn" class="btn btn-outline btn-sm" style="width:auto;">Choose Resume File</button>
+              <input type="file" id="placementResumeInput"
+                accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                style="display:none;">
+              <span class="placement-filename" id="placementResumeFileName">No file chosen</span>
+            </div>
+            <p class="field-hint">Upload your latest resume in DOC or DOCX format. PDF and external Drive links are not supported.</p>
+            <button type="button" id="placementResumeUploadBtn" class="btn btn-primary btn-sm" style="width:auto; margin-top:14px;" disabled>Upload Resume</button>
+          </div>
+
+          <!-- Professional Profiles -->
+          <div class="panel-card" style="margin-bottom:20px;">
+            <h3>Professional Profiles</h3>
+            <p id="placementLinksError" class="form-error"></p>
+            <p id="placementLinksSuccess" class="form-success">Profile links saved.</p>
+            <form id="placementLinksForm" novalidate>
+              <div class="field">
+                <label for="placementLinkedin">🔗 LinkedIn Profile <span class="saved-badge" id="linkedinSavedBadge" style="display:none;">✓ Saved</span></label>
+                <input type="url" id="placementLinkedin" placeholder="Enter LinkedIn profile URL">
+              </div>
+              <div class="field">
+                <label for="placementNaukri">🔗 Naukri Profile <span class="saved-badge" id="naukriSavedBadge" style="display:none;">✓ Saved</span></label>
+                <input type="url" id="placementNaukri" placeholder="Enter Naukri profile URL">
+              </div>
+              <div class="field">
+                <label for="placementIndeed">🔗 Indeed Profile <span class="saved-badge" id="indeedSavedBadge" style="display:none;">✓ Saved</span></label>
+                <input type="url" id="placementIndeed" placeholder="Enter Indeed profile URL">
+              </div>
+              <button type="submit" id="placementSaveLinksBtn" class="btn btn-primary btn-sm" style="width:auto;">Save Profiles</button>
+            </form>
+          </div>
+
+          <!-- Companies Applied -->
+          <div class="panel-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; margin-bottom:16px;">
+              <div>
+                <h3 style="margin-bottom:4px;">Companies Applied</h3>
+                <p style="margin:0; color:var(--ink-soft); font-size:.86rem;">Record every company you apply to so your placement activity stays organized.</p>
+              </div>
+              <button type="button" id="addCompanyBtn" class="btn btn-primary btn-sm" style="flex:0 0 auto; width:auto;">+ Add Company Application</button>
+            </div>
+            <div class="data-table-wrap">
+              <table class="data-table" id="placementCompaniesTable">
+                <thead>
+                  <tr>
+                    <th>S.No</th>
+                    <th>Company Name</th>
+                    <th>Company Contact Number</th>
+                    <th>Company Email</th>
+                    <th>Website Link / Poster</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody><tr class="empty-row"><td colspan="6">Loading…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =============== MOCK INTERVIEWS (Part A) =============== -->
+        <section id="sec-mock-interviews" class="student-section">
+          <div class="page-header">
+            <h2>Mock Interview</h2>
+            <p>A one-time practice interview based on your registered course.</p>
+          </div>
+
+          <!-- View 1: intro / rules / start, or an already-completed message -->
+          <div id="miIntroView">
+            <p style="color:var(--ink-soft); font-size:.9rem;">Loading…</p>
+          </div>
+
+          <!-- View 2: the 20-question interview itself -->
+          <div id="miInterviewView" style="display:none;">
+            <div class="mi-progress-row">
+              <span class="mi-progress-count" id="miProgressCount">Question 1 / 20</span>
+              <div class="mi-progress-bar"><div class="mi-progress-fill" id="miProgressFill"></div></div>
+            </div>
+
+            <div class="panel-card mi-question-card">
+              <p class="mi-question-text" id="miQuestionText">Loading question…</p>
+              <div class="mi-options" id="miOptionsList"></div>
+            </div>
+
+            <p id="miInterviewError" class="form-error"></p>
+
+            <div class="mi-nav-row">
+              <button type="button" id="miPrevBtn" class="btn btn-outline" style="width:auto;" disabled>Previous</button>
+              <button type="button" id="miNextBtn" class="btn btn-primary" style="width:auto;">Next</button>
+              <button type="button" id="miSubmitBtn" class="btn btn-primary" style="width:auto; display:none;">Submit Interview</button>
+            </div>
+          </div>
+
+          <!-- View 3: result, no retake -->
+          <div id="miResultView" style="display:none;">
+            <div class="panel-card mi-result-card">
+              <div class="mi-result-badge">✓ Mock Interview Completed</div>
+              <div class="detail-row"><span>Category</span><span id="miResultCategory">-</span></div>
+              <div class="detail-row"><span>Score</span><span id="miResultScore">-</span></div>
+              <div class="detail-row"><span>Percentage</span><span id="miResultPercentage">-</span></div>
+              <div class="detail-row"><span>Correct</span><span id="miResultCorrect">-</span></div>
+              <div class="detail-row"><span>Wrong</span><span id="miResultWrong">-</span></div>
+              <div class="detail-row"><span>Attempted</span><span id="miResultDate">-</span></div>
+              <div class="detail-row"><span>Status</span><span id="miResultStatus">Completed</span></div>
+              
+              <div id="miCooldownNotice" class="quiz-cooldown-badge" style="display:none;">
+                ⏱️ Quiz Cooldown Active: You can retake this quiz in <b id="miDaysRemaining">7</b> days (Available on <b id="miNextAvailableDate">-</b>).
+              </div>
+
+              <div id="miRetakeWrap" style="margin-top:16px; display:none;">
+                <button type="button" id="miRetakeBtn" class="btn btn-primary" style="width:auto;">🔄 Retake Mock Interview</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =============== CAREER GUIDANCE =============== -->
+        <section id="sec-career-guidance" class="student-section career-guidance-section">
+          <div class="page-header">
+            <h2>Career Guidance</h2>
+            <p>Explore career guidance resources and watch the recommended career guidance videos to understand career opportunities, preparation, skills, and professional development.</p>
+          </div>
+
+          <div class="panel-card career-guidance-card career-guidance-instructions">
+            <h3>Career Guidance Training Instructions</h3>
+
+            <div class="career-email-highlight" role="note" style="margin:0 0 18px; padding:16px 18px; border:2px dashed var(--crimson, #b3122d); border-radius:var(--radius-sm, 10px); background:rgba(179, 18, 45, 0.07);">
+              <div style="font-size:.78rem; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--crimson, #b3122d); margin-bottom:8px;">⚠️ IMPORTANT – USE THIS EMAIL ID</div>
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:#fff; border:1.5px solid var(--crimson, #b3122d); border-radius:8px; padding:10px 14px;">
+                <span aria-hidden="true" style="font-size:1.3rem;">📧</span>
+                <span id="careerGuidanceEmail" style="font-size:1.15rem; font-weight:800; color:var(--crimson, #b3122d); word-break:break-all; user-select:all; -webkit-user-select:all;">profenaaplacements@gmail.com</span>
+                <span style="display:flex; gap:8px; flex-wrap:wrap; margin-left:auto;">
+                  <button type="button" id="careerCopyEmailBtn" class="btn btn-outline btn-sm" style="width:auto;">📋 Copy Email →</button>
+                  <a id="careerGoWebsiteBtn" class="btn btn-primary btn-sm" style="width:auto;" href="https://www.amcurio.com/career" target="_blank" rel="noopener noreferrer">🌐 Go to Website →</a>
+                </span>
+              </div>
+              <script>
+                (function () {
+                  var btn = document.getElementById("careerCopyEmailBtn");
+                  if (!btn) return;
+                  var EMAIL = "profenaaplacements@gmail.com";
+                  var label = btn.textContent;
+                  var timer = null;
+                  function done(ok) {
+                    btn.textContent = ok ? "✅ Copied!" : "Copy failed - select the email and copy it";
+                    clearTimeout(timer);
+                    timer = setTimeout(function () { btn.textContent = label; }, 2000);
+                  }
+                  function fallbackCopy() {
+                    var ta = document.createElement("textarea");
+                    ta.value = EMAIL;
+                    ta.setAttribute("readonly", "");
+                    ta.style.position = "fixed";
+                    ta.style.opacity = "0";
+                    document.body.appendChild(ta);
+                    ta.select();
+                    var ok = false;
+                    try { ok = document.execCommand("copy"); } catch (e) {}
+                    document.body.removeChild(ta);
+                    done(ok);
+                  }
+                  btn.addEventListener("click", function () {
+                    if (navigator.clipboard && window.isSecureContext) {
+                      navigator.clipboard.writeText(EMAIL).then(function () { done(true); }, fallbackCopy);
+                    } else {
+                      fallbackCopy();
+                    }
+                  });
+                })();
+              </script>
+            </div>
+
+            <ol>
+              <li><b>IMPORTANT:</b> To access the Career Guidance Training videos FREE OF COST, register on Amcurio using the email ID provided below: <b>profenaaplacements@gmail.com</b></li>
+              <li>Make sure you use exactly <b>profenaaplacements@gmail.com</b> while registering. This email ID is required to access the free Career Guidance Training videos.</li>
+              <li>Complete the required Amcurio registration and profile setup properly.</li>
+              <li>After completing the registration and required profile details, you can access the Career Guidance Training resources.</li>
+              <li>The Career Guidance Training videos are available FREE OF COST for students who register using the above-mentioned email ID.</li>
+              <li>Click the "Go to Career Guidance Training" button below to open the Amcurio Career Guidance page.</li>
+              <li>Complete your profile properly to access the available Career Guidance Training resources.</li>
+            </ol>
+
+            <a class="btn btn-primary career-guidance-btn" href="https://www.amcurio.com/career" target="_blank" rel="noopener noreferrer">🎥 Go to Career Guidance Training</a>
+          </div>
+        </section>
+
+        <!-- =============== REFER A FRIEND =============== -->
+        <section id="sec-referral" class="student-section">
+          <div class="page-header">
+            <h2>Refer a Friend</h2>
+            <p>Share your referral code and track who's joined using it.</p>
+          </div>
+
+          <div class="referral-code-box">
+            <div>
+              <div class="referral-code-label">Your Referral Code</div>
+              <div class="referral-code-value" id="referralCodeValue">—</div>
+            </div>
+            <div class="referral-actions">
+              <button type="button" id="copyReferralBtn" class="btn btn-outline btn-sm">Copy Code</button>
+              <button type="button" id="shareReferralBtn" class="btn btn-primary btn-sm">Share</button>
+            </div>
+          </div>
+
+          <div class="referral-stat-row">
+            <div class="summary-card">
+              <div class="sc-label">Total Referrals</div>
+              <div class="sc-value" id="referralTotalCount">—</div>
+            </div>
+            <div class="summary-card accent-good">
+              <div class="sc-label">Joined</div>
+              <div class="sc-value" id="referralJoinedCount">—</div>
+            </div>
+          </div>
+
+          <div class="panel-card" style="margin-bottom:20px;">
+            <h3>Refer Someone</h3>
+            <p class="field-hint" style="margin:0 0 12px;">Enter your friend's referral code below.</p>
+            <p id="friendReferralError" class="form-error"></p>
+            <div class="field">
+              <label for="friendReferralCode">Friend's Referral Code</label>
+              <input type="text" id="friendReferralCode" placeholder="Enter referral code" maxlength="40" autocomplete="off" autocapitalize="characters" spellcheck="false" />
+            </div>
+            <button type="button" id="submitReferralBtn" class="btn btn-primary">Submit Referral</button>
+          </div>
+
+          <div class="panel-card">
+            <h3>Referral History</h3>
+            <div class="data-table-wrap">
+              <table class="data-table" id="referralHistoryTable">
+                <thead><tr><th>Name</th><th>Status</th><th>Date</th></tr></thead>
+                <tbody><tr class="empty-row"><td colspan="3">Loading…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =============== FEEDBACK =============== -->
+        <section id="sec-feedback" class="student-section">
+          <div class="page-header"><h2>Feedback</h2><p>Share feedback about your training experience.</p></div>
+
+          <div class="panel-card" style="margin-bottom:20px;">
+            <h3>Submit Feedback</h3>
+            <p id="feedbackFormError" class="form-error"></p>
+            <p id="feedbackFormSuccess" class="form-success">Thanks for your feedback! You'll see it below once it's submitted.</p>
+
+            <form id="feedbackForm" novalidate>
+              <div class="field">
+                <label>Rating</label>
+                <div class="star-rating" id="starRatingInput" role="radiogroup" aria-label="Rating out of 5">
+                  <button type="button" data-star="1">★</button>
+                  <button type="button" data-star="2">★</button>
+                  <button type="button" data-star="3">★</button>
+                  <button type="button" data-star="4">★</button>
+                  <button type="button" data-star="5">★</button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="feedbackComment">Comments</label>
+                <textarea id="feedbackComment" rows="3" maxlength="1000"
+                  style="width:100%; font-family:inherit; font-size:.96rem; padding:12px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--line); resize:vertical;"
+                  placeholder="Tell us about your training experience" required></textarea>
+              </div>
+              <button type="submit" id="submitFeedbackBtn" class="btn btn-primary">Submit Feedback</button>
+            </form>
+          </div>
+
+          <div class="panel-card">
+            <h3>Your Feedback History</h3>
+            <div id="feedbackHistoryList">
+              <p style="color:var(--ink-soft); margin:0;">Loading…</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- =============== JOB UPDATES (isolated new feature) =============== -->
+        <section id="sec-job-updates" class="student-section">
+          <div class="page-header">
+            <h2>Job Updates</h2>
+            <p>Published job openings matching your department.</p>
+          </div>
+
+          <div class="panel-card" style="margin-bottom:20px;">
+            <div class="detail-row"><span>Your Department</span><span id="jobUpdatesDeptValue">-</span></div>
+          </div>
+
+          <div id="jobUpdatesList" class="job-update-list">
+            <p style="color:var(--ink-soft); margin:0;">Loading…</p>
+          </div>
+        </section>
+
+        <!-- =============== CEO UPDATES =============== -->
+        <section id="sec-ceo-updates" class="student-section">
+          <div class="page-header">
+            <h2>CEO Updates</h2>
+            <p>Announcements, instructions and shared links from the CEO.</p>
+          </div>
+
+          <div id="ceoUpdatesList" class="ceo-update-list"></div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Update Progress modal (My Projects) -->
+  <div id="progressModalOverlay" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <h3>Update Progress</h3>
+      <p style="color:var(--ink-soft); font-size:.88rem; margin:0 0 16px;">Let your trainer know how far along you are.</p>
+      <div class="field">
+        <label for="progressPercentInput">Progress (%)</label>
+        <input type="number" id="progressPercentInput" min="0" max="100" step="5" placeholder="e.g. 40">
+      </div>
+      <div class="field">
+        <label for="progressNoteInput">Note</label>
+        <textarea id="progressNoteInput" rows="3"
+          style="width:100%; font-family:inherit; font-size:.92rem; padding:12px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--line); resize:vertical;"
+          placeholder="What have you done so far?"></textarea>
+      </div>
+      <p id="progressModalError" class="form-error"></p>
+      <div style="display:flex; gap:10px;">
+        <button type="button" id="progressCancelBtn" class="btn btn-outline">Cancel</button>
+        <button type="button" id="progressConfirmBtn" class="btn btn-primary">Save Progress</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit / Resubmit Project modal (My Projects) -->
+  <div id="submitProjectModalOverlay" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <h3 id="submitProjectModalTitle">Submit Project</h3>
+      <p style="color:var(--ink-soft); font-size:.88rem; margin:0 0 16px;">Share a link to your work and any notes for your reviewer.</p>
+      <div class="field">
+        <label for="submissionUrlInput">Project Link</label>
+        <input type="text" id="submissionUrlInput" placeholder="e.g. GitHub / Drive link">
+      </div>
+      <div class="field">
+        <label for="submissionNoteInput">Note</label>
+        <textarea id="submissionNoteInput" rows="3"
+          style="width:100%; font-family:inherit; font-size:.92rem; padding:12px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--line); resize:vertical;"
+          placeholder="Anything your reviewer should know" required></textarea>
+      </div>
+      <p id="submitProjectModalError" class="form-error"></p>
+      <div style="display:flex; gap:10px;">
+        <button type="button" id="submitProjectCancelBtn" class="btn btn-outline">Cancel</button>
+        <button type="button" id="submitProjectConfirmBtn" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Details modal (My Projects / Project Journey) -->
+  <div id="viewProjectModalOverlay" class="modal-overlay" style="display:none;">
+    <div class="modal-box project-details-box" role="dialog" aria-modal="true" aria-labelledby="viewProjectModalTitle">
+      <div class="pd-head">
+        <div class="pd-head-text">
+          <h3 id="viewProjectModalTitle">Project Details</h3>
+          <p class="project-stage-category" id="viewProjectModalCategory"></p>
+        </div>
+        <span id="viewProjectModalStatus" class="pd-head-status"></span>
+      </div>
+      <div id="viewProjectModalBody" class="pd-body"></div>
+      <div class="pd-foot">
+        <button type="button" id="viewProjectCloseBtn" class="btn btn-outline">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Mock Interview confirmation modal -->
+  <div id="miSubmitConfirmModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <h3>Submit Mock Interview?</h3>
+      <p style="color:var(--ink-soft); font-size:.88rem; margin:0 0 16px;">
+        You've answered <span id="miSubmitAnsweredCount">0</span> of 20 questions. Once submitted, you cannot change your answers or retake this interview.
+      </p>
+      <div style="display:flex; gap:10px;">
+        <button type="button" id="miSubmitCancelBtn" class="btn btn-outline">Keep Reviewing</button>
+        <button type="button" id="miSubmitConfirmBtn" class="btn btn-primary">Submit Interview</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Company Application modal (Placement) -->
+  <div id="companyModalOverlay" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <h3>Add Company Application</h3>
+      <p style="color:var(--ink-soft); font-size:.88rem; margin:0 0 16px;">Enter the company details and website link.</p>
+      <p id="companyModalError" class="form-error"></p>
+      <div class="field">
+        <label for="companyNameInput">Company Name</label>
+        <input type="text" id="companyNameInput" placeholder="e.g. ABC Technologies" maxlength="120">
+      </div>
+      <div class="field">
+        <label for="companyContactInput">Company Contact Number</label>
+        <input type="tel" id="companyContactInput" placeholder="10-digit mobile number" maxlength="10">
+      </div>
+      <div class="field">
+        <label for="companyEmailInput">Company Email</label>
+        <input type="email" id="companyEmailInput" placeholder="e.g. hr@company.com">
+      </div>
+      <div class="field">
+        <label for="companyWebsiteInput">Company Website Link</label>
+        <input type="url" id="companyWebsiteInput" placeholder="https://company.com">
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button type="button" id="companyCancelBtn" class="btn btn-outline">Cancel</button>
+        <button type="button" id="companyConfirmBtn" class="btn btn-primary">Save Application</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/push-notifications.js"></script>
+  <script src="assets/js/session-tracker.js"></script>
+  <script src="assets/js/placement.js"></script>
+  <script src="assets/js/performance.js"></script>
+  <script src="assets/js/mock-interview.js"></script>
+  <script src="assets/js/project-completion-state.js"></script>
+  <script src="assets/js/student-dashboard.js"></script>
+  <script src="assets/js/ceo-updates.js"></script>
+</body>
+</html>

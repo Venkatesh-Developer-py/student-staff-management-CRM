@@ -1,0 +1,1786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Console — Profenaa Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/portal.css">
+<link rel="stylesheet" href="assets/css/meeting-updates-admin.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="assets/img/icon-192.png">
+<link rel="apple-touch-icon" href="assets/img/icon-192.png">
+<link rel="stylesheet" href="assets/css/job-updates-actions.css">
+<meta name="theme-color" content="#b3122d">
+</head>
+<body>
+
+  <div class="admin-shell">
+    <div class="admin-sidebar-backdrop" id="adminSidebarBackdrop"></div>
+
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-brand">
+        <img class="logo-chip" src="assets/logo/Logo.png" alt="Profenaa Logo">
+        <div>
+          <b>PROFENAA GROUPS</b>
+          <small>Admin Console</small>
+        </div>
+      </div>
+
+      <button class="nav-item active" data-section="section-dashboard">📊 Dashboard</button>
+      <button class="nav-item" data-section="section-students">📋 Registered Users</button>
+      <!-- Attendance is the ONLY section Trainers see (their account hides all
+           other modules via TRAINER_ALLOWED_SECTIONS in admin-dashboard.js).
+           My Projects is Admin-only. -->
+      <button class="nav-item" data-section="section-sessions">🔐 Login &amp; Activity</button>
+      <button class="nav-item" data-section="section-attendance">🗓️ Attendance</button>
+      <button class="nav-item" data-section="section-leave">📝 Leave Management</button>
+      <button class="nav-item" data-section="section-projects">💻 Student Projects</button>
+      <button class="nav-item" data-section="section-scores">📊 Mock Interview Results</button>
+
+      <button class="nav-item" data-section="section-placements">💼 Placements</button>
+
+      <button class="nav-item" data-section="section-assign">🎓 Assign Certificate</button>
+      
+
+
+      <button class="nav-item" data-section="section-notifications">🔔 Notifications</button>
+      <button class="nav-item" data-section="section-referrals">🎁 Referrals</button>
+      <button class="nav-item" data-section="section-job-updates">💼 Recent Job Updates</button>
+      <button class="nav-item" data-section="section-meeting-updates">📢 CEO Meeting Updates</button>
+      <button class="nav-item" data-section="section-trainers">👨‍🏫 HOD'S</button>
+
+      <div class="admin-sidebar-footer">
+        <span id="adminNameLabel">Admin</span>
+        <button id="logoutBtn" class="link-btn" style="color:#fff;">Log Out</button>
+      </div>
+    </aside>
+
+    <div>
+      <div class="admin-topbar">
+        <button type="button" class="admin-sidebar-toggle-btn" id="adminSidebarToggleBtn" aria-label="Open admin menu" aria-expanded="false">☰</button>
+        <h2>Admin Dashboard</h2>
+      </div>
+
+      <main class="admin-main">
+
+      <!-- =============== SECTION 0: CRM DASHBOARD =============== -->
+      <section id="section-dashboard" class="admin-section active">
+        <div class="admin-main-header">
+          <div>
+            <h2>CRM &amp; Department Analytics</h2>
+            <p>Real-time student lifecycle metrics, department breakdown, branch distribution, and student performance.</p>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <button type="button" class="btn btn-outline btn-sm" id="refreshDashboardBtn">🔄 Refresh Data</button>
+          </div>
+        </div>
+
+        <!-- Login summary cards (same data/calculation as Login & Activity) -->
+        <div class="metric-cards-grid" id="dashLoginSummary" style="margin-bottom:20px;">
+          <div class="metric-card">
+            <div class="metric-card-left"><div class="metric-icon icon-users">👥</div></div>
+            <div class="metric-card-right">
+              <span class="metric-label">Total Registered Students</span>
+              <div class="metric-value" id="dashKpiTotal">0</div>
+              <div class="metric-trend positive">Live <span class="trend-sub">registered count</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left"><div class="metric-icon icon-logins">🚪</div></div>
+            <div class="metric-card-right">
+              <span class="metric-label" id="dashActiveCardLabel">Active Logins (This Week)</span>
+              <div class="metric-value" id="dashKpiActive">0</div>
+              <div class="metric-trend positive">Live <span class="trend-sub">active in period</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left"><div class="metric-icon icon-sessions">⏰</div></div>
+            <div class="metric-card-right">
+              <span class="metric-label">Total Login Sessions</span>
+              <div class="metric-value" id="dashKpiSessions">0</div>
+              <div class="metric-trend positive">Live <span class="trend-sub">recorded sessions</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left"><div class="metric-icon icon-inactive">👤</div></div>
+            <div class="metric-card-right">
+              <span class="metric-label">Inactive Students</span>
+              <div class="metric-value" id="dashKpiInactive">0</div>
+              <div class="metric-trend negative">Live <span class="trend-sub">inactive in period</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Branch Distribution Analytics -->
+        <div class="admin-main-header" style="margin-top:4px; margin-bottom:12px;">
+          <div>
+            <h3 style="margin:0; font-size:1.1rem; font-weight:800;">📍 Branch Student Distribution</h3>
+            <p style="margin:2px 0 0; font-size:.82rem; color:var(--ink-soft);">Real-time enrollment across 5 training branch centers.</p>
+          </div>
+        </div>
+        <div class="crm-branch-grid" id="crmBranchDistributionCards" style="margin-bottom:20px;">
+          <!-- Rendered by JS -->
+        </div>
+
+        <!-- CRM KPI Stat Cards -->
+        <div class="crm-kpi-grid">
+          <div class="crm-kpi-card accent-dark">
+            <div class="crm-kpi-top">
+              <span class="crm-kpi-label">Total Enrolled</span>
+              <div class="crm-kpi-icon">👥</div>
+            </div>
+            <div class="crm-kpi-value" id="kpiTotalStudents">—</div>
+            <div class="crm-kpi-sub"><span class="crm-kpi-chip crimson">6 Departments</span></div>
+          </div>
+
+          <div class="crm-kpi-card accent-good">
+            <div class="crm-kpi-top">
+              <span class="crm-kpi-label">Avg Attendance</span>
+              <div class="crm-kpi-icon">🗓️</div>
+            </div>
+            <div class="crm-kpi-value" id="kpiAvgAttendance">—%</div>
+            <div class="crm-kpi-sub"><span class="crm-kpi-chip good">Overall Rate</span></div>
+          </div>
+
+          <div class="crm-kpi-card accent-crimson">
+            <div class="crm-kpi-top">
+              <span class="crm-kpi-label">Mock Interview</span>
+              <div class="crm-kpi-icon">🎯</div>
+            </div>
+            <div class="crm-kpi-value" id="kpiMockInterviewRate">—%</div>
+            <div class="crm-kpi-sub"><span class="crm-kpi-chip crimson" id="kpiMockCountSub">— Completed</span></div>
+          </div>
+
+          <div class="crm-kpi-card accent-warn">
+            <div class="crm-kpi-top">
+              <span class="crm-kpi-label">Projects Approved</span>
+              <div class="crm-kpi-icon">💻</div>
+            </div>
+            <div class="crm-kpi-value" id="kpiProjectsRate">—</div>
+            <div class="crm-kpi-sub"><span class="crm-kpi-chip good" id="kpiProjectsSub">Submissions</span></div>
+          </div>
+
+          <div class="crm-kpi-card accent-good">
+            <div class="crm-kpi-top">
+              <span class="crm-kpi-label">Certificates Issued</span>
+              <div class="crm-kpi-icon">🎓</div>
+            </div>
+            <div class="crm-kpi-value" id="kpiCertificatesIssued">—</div>
+            <div class="crm-kpi-sub"><span class="crm-kpi-chip good" id="kpiCertRateSub">—% Certified</span></div>
+          </div>
+        </div>
+
+        <!-- Department Cards Grid -->
+        <div class="admin-main-header" style="margin-top:10px; margin-bottom:14px;">
+          <div>
+            <h3 style="margin:0; font-size:1.15rem; font-weight:800;">Department CRM Roster</h3>
+            <p style="margin:2px 0 0; font-size:.84rem; color:var(--ink-soft);">Click any department card to view its student roster and detailed profiles.</p>
+          </div>
+        </div>
+
+        <div class="dept-cards-grid" id="crmDepartmentCards">
+          <!-- Populated dynamically by JS -->
+        </div>
+
+        <!-- Filtered Department Student Roster View (shown when department card is clicked) -->
+        <div id="crmDeptRosterView" style="display:none; margin-bottom:30px;">
+          <div class="dept-filter-banner">
+            <div class="dept-filter-info">
+              <div class="dept-filter-icon" id="deptFilterIcon">🏢</div>
+              <div>
+                <b id="deptFilterTitle" style="font-size:1.02rem; color:var(--ink);">Department Students</b>
+                <p id="deptFilterCount" style="margin:0; font-size:.8rem; color:var(--ink-soft);">Showing students in this department</p>
+              </div>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <input type="text" id="deptStudentSearch" class="search-input" placeholder="Search department students…">
+              <button type="button" class="btn btn-outline btn-sm" id="closeDeptRosterBtn">✕ Clear Filter</button>
+            </div>
+          </div>
+
+          <div class="data-table-wrap">
+            <table class="data-table" id="crmDeptStudentsTable">
+              <thead>
+                <tr>
+                  <th>Student</th><th>Course / Dept</th><th>Attendance %</th><th>Mock Score</th><th>Projects</th><th>Certificate</th><th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="empty-row"><td colspan="7">Loading department students…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-row" id="crmDeptStudentsPager"></div>
+        </div>
+
+        <!-- CRM Analytics & Department Comparison -->
+        <div class="crm-charts-grid">
+          <div class="crm-chart-card">
+            <h4>Department Distribution</h4>
+            <p>Total student enrollment breakdown across technical domains.</p>
+            <div class="dept-bar-list" id="deptDistributionBars">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <div class="crm-chart-card">
+            <h4>Department Attendance &amp; Skill Benchmarks</h4>
+            <p>Average attendance rate and mock interview performance by domain.</p>
+            <div class="dept-bar-list" id="deptPerformanceBars">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Lifecycle Pipeline Flow Chart -->
+        <div class="crm-flowchart-card">
+          <div class="crm-flowchart-header">
+            <div>
+              <h3>Student Lifecycle &amp; CRM Pipeline</h3>
+              <p>End-to-end milestone journey from registration to certified graduation.</p>
+            </div>
+            <span class="crm-kpi-chip good">Live Pipeline</span>
+          </div>
+
+          <div class="pipeline-flow" id="lifecyclePipelineFlow">
+            <!-- Dynamic pipeline steps rendered by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- =============== SECTION 1: REGISTERED USERS =============== -->
+      <section id="section-students" class="admin-section">
+        <div class="admin-main-header">
+          <div>
+            <h2>Registered Users</h2>
+            <p>Every student who has signed up, with their full registration details and multi-filter capabilities.</p>
+          </div>
+        </div>
+
+        <!-- Multi-filter bar -->
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
+          <select id="filterStudentBranch" class="branch-select-filter">
+            <option value="ALL">All Branches</option>
+            <option value="Kinathukadavu">Kinathukadavu</option>
+            <option value="Pollachi">Pollachi</option>
+            <option value="Coimbatore">Coimbatore</option>
+            <option value="Udumalaipettai">Udumalaipettai</option>
+            <option value="Dindigul">Dindigul</option>
+            <option value="Thirunelveli">Thirunelveli</option>
+          </select>
+          <select id="filterStudentCourse" class="branch-select-filter" style="max-width:260px;">
+            <option value="ALL">All Courses</option>
+            <option value="Mechanical CAD">Mechanical CAD</option>
+            <option value="Civil CAD">Civil CAD</option>
+            <option value="Electrical CAD">Electrical CAD</option>
+            <option value="Electronic CAD">Electronic CAD</option>
+            <option value="Arts and Multimedia">Arts and Multimedia</option>
+            <option value="Computer Science / IT">Computer Science / IT</option>
+          </select>
+          <select id="filterStudentStatus" class="branch-select-filter">
+            <option value="ALL">All Statuses</option>
+            <option value="CERTIFIED">Certificate Issued</option>
+            <option value="PENDING">Certificate Pending</option>
+          </select>
+          <input type="text" id="studentSearch" class="search-input" style="flex:1; min-width:200px;" placeholder="Search by name, email or student ID…">
+          <button type="button" class="btn btn-outline btn-sm" id="exportRegisteredUsersExcelBtn">
+            📥 Export Registered Users (Excel)
+          </button>
+        </div>
+
+        <div class="scroll-hint-host" id="studentsScrollHost">
+        <div class="data-table-wrap">
+          <table class="data-table" id="studentsTable">
+            <thead>
+              <tr>
+                <th>S.No</th><th>Student ID</th><th>Name</th><th>Email</th><th>Branch</th><th>Course</th>
+                <th>Date of Join</th><th>Registered</th><th>Certificate</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="empty-row"><td colspan="10">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="sync-hscroll" id="studentsSyncScroll" aria-hidden="true"><div class="sync-hscroll-inner"></div></div>
+        </div>
+      </section>
+
+      <!-- =============== SECTION: PLACEMENTS -> APPLIED COMPANIES (Admin only) =============== -->
+      <section id="section-placements" class="admin-section">
+        <div class="admin-main-header">
+          <div>
+            <h2>🏢 Placement &amp; Applied Companies</h2>
+            <p>Monitor student corporate application activity, company portfolios, and interview proof verification.</p>
+          </div>
+          <button type="button" class="btn btn-primary btn-sm" id="exportAppliedCompaniesExcelBtn" style="display:inline-flex; align-items:center; gap:6px;">
+            <span>📥</span> Export to Excel
+          </button>
+        </div>
+
+        <!-- Placement Overview Metric Cards -->
+        <div class="metric-cards-grid" style="margin-bottom:20px;">
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-users">📋</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Total Applications</span>
+              <div class="metric-value" id="plKpiTotalApps">0</div>
+              <div class="metric-trend positive">Live <span class="trend-sub">submitted applications</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-logins">🎓</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Active Applicants</span>
+              <div class="metric-value" id="plKpiUniqueStudents">0</div>
+              <div class="metric-trend positive">Live <span class="trend-sub">students applied</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-sessions">🏢</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Target Companies</span>
+              <div class="metric-value" id="plKpiUniqueCompanies">0</div>
+              <div class="metric-trend positive">Live <span class="trend-sub">recruiting organizations</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-inactive" style="background:#eafaf0; color:#1f9d55;">🖼️</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Verified Posters / Proofs</span>
+              <div class="metric-value" id="plKpiWithPosters">0</div>
+              <div class="metric-trend positive" style="color:#1f9d55;">Live <span class="trend-sub">upload verifications</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table Container Card -->
+        <div class="table-container-card">
+          <div class="admin-main-header" style="margin-bottom:14px;">
+            <div>
+              <h3 style="margin:0; font-size:1.08rem; font-weight:700;">Student Applied Companies Roster</h3>
+              <p style="margin:2px 0 0; font-size:.82rem; color:var(--ink-soft);">Detailed list of company job submissions and verification details.</p>
+            </div>
+          </div>
+
+          <!-- Multi-filter bar -->
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;">
+            <select id="plFilterBranch" class="branch-select-filter">
+              <option value="ALL">All Branches</option>
+              <option value="Kinathukadavu">Kinathukadavu</option>
+              <option value="Pollachi">Pollachi</option>
+              <option value="Coimbatore">Coimbatore</option>
+              <option value="Udumalaipettai">Udumalaipettai</option>
+              <option value="Dindigul">Dindigul</option>
+              <option value="Thirunelveli">Thirunelveli</option>
+            </select>
+            <select id="plFilterCourse" class="branch-select-filter" style="max-width:260px;">
+              <option value="ALL">All Courses</option>
+              <option value="Mechanical CAD">Mechanical CAD</option>
+              <option value="Civil CAD">Civil CAD</option>
+              <option value="Electrical CAD">Electrical CAD</option>
+              <option value="Electronic CAD">Electronic CAD</option>
+              <option value="Arts and Multimedia">Arts and Multimedia</option>
+              <option value="Computer Science / IT">Computer Science / IT</option>
+            </select>
+            <select id="plFilterStatus" class="branch-select-filter">
+              <option value="ALL">All Statuses</option>
+              <option value="CERTIFIED">Certificate Issued</option>
+              <option value="PENDING">Certificate Pending</option>
+            </select>
+            <div class="table-search-wrap" style="flex:1; min-width:220px;">
+              <span class="search-lens">🔍</span>
+              <input type="text" id="plSearch" class="search-input" placeholder="Search by name, email, student ID or company…">
+            </div>
+          </div>
+
+          <div class="data-table-wrap">
+            <table class="data-table" id="appliedCompaniesTable">
+              <thead>
+                <tr>
+                  <th style="width:60px; text-align:center;">S.No</th>
+                  <th>Student Info</th>
+                  <th>Company Info</th>
+                  <th>Contact &amp; Comms</th>
+                  <th>Verification &amp; Links</th>
+                  <th>Applied Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="empty-row"><td colspan="6">Loading applied company records…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============== ADMIN EDIT STUDENT MODAL (Registered Users) =============== -->
+      <div class="modal-overlay" id="editStudentModal" style="display:none;">
+        <div class="modal-box job-update-form" role="dialog" aria-modal="true" aria-labelledby="editStudentModalTitle">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <h3 id="editStudentModalTitle">Edit Student</h3>
+            <button type="button" class="link-btn" id="closeEditStudentBtn" aria-label="Close">✕</button>
+          </div>
+
+          <form id="editStudentForm" novalidate>
+            <input type="hidden" id="editStudentId">
+            <p id="editStudentError" class="form-error"></p>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="editStudentIdView">Student ID *</label>
+                <input type="text" id="editStudentIdView" maxlength="40" autocomplete="off" spellcheck="false">
+              </div>
+              <div class="field">
+                <label for="editStudentName">Full Name *</label>
+                <input type="text" id="editStudentName" maxlength="50" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="editStudentEmail">Email *</label>
+                <input type="email" id="editStudentEmail" maxlength="150" autocomplete="off">
+              </div>
+              <div class="field">
+                <label for="editStudentPhone">Phone *</label>
+                <input type="text" id="editStudentPhone" maxlength="10" inputmode="numeric" autocomplete="off">
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="editStudentBranch">Branch *</label>
+                <select id="editStudentBranch">
+                  <option value="">Select branch</option>
+                  <option value="Kinathukadavu">Kinathukadavu</option>
+                  <option value="Pollachi">Pollachi</option>
+                  <option value="Coimbatore">Coimbatore</option>
+                  <option value="Udumalaipettai">Udumalaipettai</option>
+                  <option value="Dindigul">Dindigul</option>
+                  <option value="Thirunelveli">Thirunelveli</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="editStudentDepartment">Department *</label>
+                <select id="editStudentDepartment">
+                  <option value="">Select department</option>
+                  <option value="Mechanical CAD">Mechanical CAD</option>
+                  <option value="Civil CAD">Civil CAD</option>
+                  <option value="Electrical CAD">Electrical CAD</option>
+                  <option value="Electronic CAD">Electronic CAD</option>
+                  <option value="Arts and Multimedia">Arts and Multimedia</option>
+                  <option value="Computer Science / IT">Computer Science / IT</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="editStudentCourse">Course / Specialization</label>
+                <input type="text" id="editStudentCourse" maxlength="150" autocomplete="off">
+              </div>
+              <div class="field">
+                <label for="editStudentJoin">Date of Join</label>
+                <input type="date" id="editStudentJoin">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="editStudentCollege">College Name</label>
+              <input type="text" id="editStudentCollege" maxlength="200" autocomplete="off">
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="editStudentCollegeStart">College Start Date</label>
+                <input type="date" id="editStudentCollegeStart">
+              </div>
+              <div class="field">
+                <label for="editStudentCollegeEnd">College End Date</label>
+                <input type="date" id="editStudentCollegeEnd">
+              </div>
+            </div>
+
+            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+              <button type="button" class="btn btn-outline" id="cancelEditStudentBtn">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="saveEditStudentBtn">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- =============== SECTION 2: ASSIGN CERTIFICATE =============== -->
+      <section id="section-assign" class="admin-section">
+        <div class="admin-main-header">
+          <div>
+            <h2>Assign Certificate</h2>
+            <p>Search for a registered student, then upload and issue their certificate.</p>
+          </div>
+        </div>
+
+        <!-- View A: search + full list (shown until a student is picked) -->
+        <div id="assignSearchView">
+          <input type="text" id="assignSearch" class="search-input" style="width:100%; margin-bottom:20px;"
+                 placeholder="Search by name, email or student ID to select a student…">
+
+          <div class="data-table-wrap student-pick-list" id="assignStudentList">
+            <div class="student-pick-row"><span>Loading…</span></div>
+          </div>
+          <div class="pagination-row" id="assignListPager"></div>
+        </div>
+
+        <!-- View B: selected student + upload form (list is hidden entirely, not side-by-side) -->
+        <div id="assignSelectedView" style="display:none;">
+          <button type="button" id="backToStudentListBtn" class="back-link">&larr; Choose a different student</button>
+
+          <div class="panel-card" style="margin-bottom:20px;">
+            <div class="info-grid">
+              <div class="info-item"><span class="info-label">Student</span><b id="assignStudentName">-</b></div>
+              <div class="info-item"><span class="info-label">Student ID</span><b id="assignStudentIdVal">-</b></div>
+              <div class="info-item"><span class="info-label">Email</span><b id="assignStudentEmail">-</b></div>
+              <div class="info-item"><span class="info-label">Course</span><b id="assignStudentCourse">-</b></div>
+              <div class="info-item"><span class="info-label">Date of Join</span><b id="assignStudentJoin">-</b></div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <form id="assignForm">
+              <div class="field">
+                <label for="courseNameInput">Course Name</label>
+                <input type="text" id="courseNameInput" placeholder="Course name">
+              </div>
+              <div class="field">
+                <label>Certificate File (PDF, JPG, or PNG · Max 5MB)</label>
+                <input type="file" id="certFile" class="plain-file-input" accept=".pdf,.png,.jpg,.jpeg">
+              </div>
+              <button type="submit" id="assignBtn" class="btn btn-primary">ASSIGN CERTIFICATE</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============== SECTION 3: STUDENT SKILL SCORES (now Mock Interview analytics; old PEST kept, just secondary — Part D/P) =============== -->
+      <section id="section-scores" class="admin-section">
+
+        <!-- View A: six Mock Interview category cards -->
+        <div id="scoresCategoryView">
+          <div class="admin-main-header">
+            <div>
+              <h2>Student Skill Scores</h2>
+              <p>Mock Interview results by category. Select a category to view student attempts.</p>
+            </div>
+          </div>
+          <div class="category-card-grid" id="scoreCategoryCards">
+            <p style="color:var(--ink-soft); font-size:.88rem;">Loading categories…</p>
+          </div>
+        </div>
+
+        <!-- View B: students within a selected category -->
+        <div id="scoresCategoryDetailView" style="display:none;">
+          <div class="admin-main-header">
+            <div>
+              <button type="button" class="link-btn" id="scoresBackToCategoriesBtn" style="margin-bottom:8px;">&larr; All Categories</button>
+              <h2 id="scoresCategoryTitle">Category</h2>
+              <p>Mock Interview Results</p>
+            </div>
+            <input type="text" id="scoreSearch" class="search-input" placeholder="Search by student name or ID…">
+          </div>
+
+          <div class="data-table-wrap">
+            <table class="data-table" id="scoresTable">
+              <thead>
+                <tr>
+                  <th>Student Name</th><th>Student ID</th><th>Course</th>
+                  <th>Score / 20</th><th>Percentage</th><th>Correct</th><th>Wrong</th><th>Attempted Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="empty-row"><td colspan="8">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-row" id="scoresPager"></div>
+        </div>
+
+        <!-- Legacy PEST results — untouched logic, just collapsed by default (Part P: must not be deleted or broken) -->
+        <details class="legacy-pest-panel">
+          <summary>View Legacy PEST Skill-Test Results</summary>
+          <div class="admin-main-header" style="margin-top:16px;">
+            <div>
+              <p>Every PEST skill-test attempt, with the student's contact details and score. Separate from Mock Interview.</p>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button id="exportScoresBtn" class="btn btn-outline btn-sm">⬇ Download the PEST Exam Result of the Students</button>
+              <input type="text" id="pestScoreSearch" class="search-input" placeholder="Search by name or phone number…">
+            </div>
+          </div>
+
+          <div class="data-table-wrap">
+            <table class="data-table" id="pestScoresTable">
+              <thead>
+                <tr>
+                  <th>Name</th><th>Phone Number</th><th>Department</th>
+                  <th>Score</th><th>Correct / Total</th><th>Attempted On</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="empty-row"><td colspan="7">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-row" id="pestScoresPager"></div>
+        </details>
+      </section>
+
+      <!-- =============== SECTION 4: ATTENDANCE / STUDENT PERFORMANCE =============== -->
+      <section id="section-attendance" class="admin-section">
+        <div class="admin-main-header">
+          <div>
+            <h2>Student Performance</h2>
+            <p>Click a student to view contact details and performance summary.</p>
+          </div>
+          <div class="date-stepper-wrap">
+            <div class="date-stepper">
+              <span class="date-stepper-icon">📅</span>
+              <span id="attDateDisplayLabel">18 - 09 - 2026</span>
+              <input type="date" id="attendanceDateInput" class="date-stepper-native-input" title="Change date">
+              <span class="date-stepper-arrow">›</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="student-perf-container">
+          <div class="student-perf-main">
+            <div class="data-table-wrap">
+              <table class="data-table student-perf-table" id="attendanceTable">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th style="text-align:center;">Present</th>
+                    <th style="text-align:center;">Absent</th>
+                    <th style="text-align:center;">Leave</th>
+                    <th>Performance</th>
+                    <th style="width:40px;"></th>
+                  </tr>
+                </thead>
+                <tbody id="attendanceTableBody">
+                  <tr class="empty-row"><td colspan="6">Loading students…</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination-row" id="attendancePager"></div>
+          </div>
+
+          <!-- Student Details Side Drawer (Image 1 reference) -->
+          <div class="student-perf-drawer" id="studentPerfDrawer">
+            <div class="drawer-header">
+              <h3>Student Details</h3>
+              <button type="button" class="drawer-close-btn" id="closePerfDrawerBtn" aria-label="Close">✕</button>
+            </div>
+            <div class="drawer-body" id="perfDrawerContent">
+              <div class="drawer-empty-state">
+                <p>Click any student row to view details.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============== SECTION 5: LOGIN & ACTIVITY =============== -->
+      <section id="section-sessions" class="admin-section">
+        <div class="admin-main-header">
+          <div>
+            <h2>Login &amp; Activity</h2>
+            <p>Track student login activity and platform usage insights.</p>
+          </div>
+          <div class="header-dropdown-wrap">
+            <div class="date-range-badge">
+              <span>📅</span>
+              <span id="sessionDateRangeLabel">This Week</span>
+              <select id="sessionPeriodSelect" class="badge-select">
+                <option value="today">Today (Day)</option>
+                <option value="this_week" selected>This Week (Week)</option>
+                <option value="last_week">Last Week</option>
+                <option value="this_month">This Month</option>
+                <option value="month_sep_2026">September 2026</option>
+                <option value="month_aug_2026">August 2026</option>
+                <option value="month_jul_2026">July 2026</option>
+                <option value="all">All Time</option>
+              </select>
+              <span>▾</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="metric-cards-grid">
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-users">👥</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Total Registered Students</span>
+              <div class="metric-value" id="sessionKpiTotal">0</div>
+              <div class="metric-trend positive">Live <span class="trend-sub">registered count</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-logins">🚪</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label" id="sessionActiveCardLabel">Active Logins (This Week)</span>
+              <div class="metric-value" id="sessionKpiActive">0</div>
+              <div class="metric-trend positive" id="sessionActivePercentSub">Live <span class="trend-sub">active in period</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-sessions">⏰</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Total Login Sessions</span>
+              <div class="metric-value" id="sessionKpiSessions">0</div>
+              <div class="metric-trend positive">Live <span class="trend-sub">recorded sessions</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-inactive">👤</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Inactive Students</span>
+              <div class="metric-value" id="sessionKpiInactive">0</div>
+              <div class="metric-trend negative" id="sessionInactivePercentSub">Live <span class="trend-sub">inactive in period</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="sessionTodayLoginsPanel" style="background:var(--bad-tint,#fdeceb); border:1.5px solid var(--line,#f0d8db); border-radius:var(--radius-lg,18px); padding:16px 18px 6px; margin-bottom:20px;">
+        <!-- Today Logins (below the 4 summary cards, above the charts) -->
+        <div class="admin-main-header" style="margin-top:0; margin-bottom:12px;">
+          <div>
+            <h3 style="margin:0; font-size:1.1rem; font-weight:800;">🔐 Today Logins</h3>
+            <p style="margin:2px 0 0; font-size:.82rem; color:var(--ink-soft);">Today's unique student login activity by branch.</p>
+          </div>
+        </div>
+        <div class="crm-branch-grid" id="sessionTodayLoginsCards" style="margin-bottom:14px;">
+          <!-- Rendered by JS -->
+        </div>
+        <div class="crm-branch-grid" style="margin-bottom:20px;">
+          <div class="crm-branch-card">
+            <div class="crm-branch-card-name">🔐 Total Today Logins</div>
+            <div class="crm-branch-card-count" id="sessionTodayLoginsTotal">—</div>
+            <div class="crm-branch-card-pct">Unique students logged in today</div>
+          </div>
+        </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-two-col-grid">
+          <div class="chart-box-card">
+            <div class="chart-box-header">
+              <div>
+                <h4 id="sessionTrendChartTitle">Login Trend</h4>
+                <p id="sessionTrendChartSub">Number of student logins across the period</p>
+              </div>
+              <select class="chart-select" id="sessionTrendFilter">
+                <option value="daily">Daily ▾</option>
+                <option value="weekly" selected>Weekly ▾</option>
+                <option value="monthly">Monthly ▾</option>
+              </select>
+            </div>
+            <div class="chart-body" id="sessionWeeklyChart">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <div class="chart-box-card">
+            <div class="chart-box-header">
+              <div>
+                <h4>Login Activity Overview</h4>
+                <p>Total logins vs inactive (selected period)</p>
+              </div>
+            </div>
+            <div class="donut-chart-wrap" id="sessionDonutChart">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Login Activity Table -->
+        <div class="table-container-card">
+          <div class="admin-main-header" style="margin-bottom:12px;">
+            <div>
+              <h3 style="margin:0; font-size:1.05rem; font-weight:700;">Recent Login Activity</h3>
+              <p style="margin:2px 0 0; font-size:.82rem; color:var(--ink-soft);">Latest login records of students</p>
+            </div>
+            <div class="table-search-wrap">
+              <span class="search-lens">🔍</span>
+              <input type="text" id="sessionSearch" class="search-input" placeholder="Search by name, email or student ID">
+            </div>
+          </div>
+
+          <div class="data-table-wrap">
+            <table class="data-table" id="sessionsTable">
+              <thead>
+                <tr>
+                  <th>STUDENT ID</th>
+                  <th>NAME</th>
+                  <th>EMAIL</th>
+                  <th>COURSE</th>
+                  <th>LAST LOGIN</th>
+                  <th>STATUS</th>
+                  <th>TOTAL LOGINS</th>
+                </tr>
+              </thead>
+              <tbody id="sessionsTableBody">
+                <tr class="empty-row"><td colspan="7">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-row" id="sessionsPager"></div>
+        </div>
+      </section>
+
+      <!-- =============== SECTION 6: LEAVE MANAGEMENT =============== -->
+      <section id="section-leave" class="admin-section">
+        <div class="admin-main-header">
+          <div>
+            <h2>Leave Management</h2>
+            <p>Manage and process student leave requests.</p>
+          </div>
+          <div class="header-dropdown-wrap">
+            <div class="date-range-badge">
+              <span>📅</span>
+              <span id="leaveDateRangeLabel">This Month</span>
+              <select id="leavePeriodSelect" class="badge-select">
+                <option value="this_month" selected>This Month</option>
+                <option value="this_week">This Week</option>
+                <option value="month_sep_2026">September 2026</option>
+                <option value="month_aug_2026">August 2026</option>
+                <option value="month_jul_2026">July 2026</option>
+                <option value="all">All Time</option>
+              </select>
+              <span>▾</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="metric-cards-grid">
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-users">👥</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Total Leave Requests</span>
+              <div class="metric-value" id="leaveKpiTotal">0</div>
+              <div class="metric-trend positive">Live <span class="trend-sub">submitted requests</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-approved">✓</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Approved</span>
+              <div class="metric-value" id="leaveKpiApproved">0</div>
+              <div class="metric-trend positive" id="leaveApprovedPercentSub">Live <span class="trend-sub">approved requests</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-rejected">✕</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Rejected</span>
+              <div class="metric-value" id="leaveKpiRejected">0</div>
+              <div class="metric-trend negative" id="leaveRejectedPercentSub">Live <span class="trend-sub">rejected requests</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-pending">⏰</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Pending</span>
+              <div class="metric-value" id="leaveKpiPending">0</div>
+              <div class="metric-trend neutral" id="leavePendingPercentSub">Live <span class="trend-sub">pending review</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-two-col-grid">
+          <div class="chart-box-card">
+            <div class="chart-box-header">
+              <div>
+                <h4>Leave Requests Trend</h4>
+                <p>Number of leave requests received in each week</p>
+              </div>
+              <select class="chart-select" id="leaveTrendFilter">
+                <option value="weekly">Weekly ▾</option>
+                <option value="monthly">Monthly ▾</option>
+              </select>
+            </div>
+            <div class="chart-body" id="leaveWeeklyChart">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <div class="chart-box-card">
+            <div class="chart-box-header">
+              <div>
+                <h4>Leave Request Status</h4>
+                <p>Distribution of leave requests</p>
+              </div>
+            </div>
+            <div class="donut-chart-wrap" id="leaveStatusDonut">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="leave-filter-bar">
+          <div class="filter-item">
+            <label>Course</label>
+            <select id="leaveCourseFilter" class="filter-control">
+              <option value="">All Courses</option>
+              <option value="Computer Science / IT">Computer Science / IT</option>
+              <option value="Mechanical CAD">Mechanical CAD</option>
+              <option value="Electrical & Electronics">Electrical & Electronics</option>
+              <option value="Civil & Architecture">Civil & Architecture</option>
+              <option value="Business Management">Business Management</option>
+              <option value="Bio-Medical">Bio-Medical</option>
+            </select>
+          </div>
+          <div class="filter-item">
+            <label>From Date</label>
+            <input type="date" id="leaveFromDate" class="filter-control date-control">
+          </div>
+          <div class="filter-item">
+            <label>To Date</label>
+            <input type="date" id="leaveToDate" class="filter-control date-control">
+          </div>
+          <div class="filter-item search-item">
+            <label>&nbsp;</label>
+            <div class="table-search-wrap" style="width:100%;">
+              <span class="search-lens">🔍</span>
+              <input type="text" id="leaveSearch" class="search-input" placeholder="Search by name, email or course">
+            </div>
+          </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-container-card">
+          <div class="admin-main-header" style="margin-bottom:12px;">
+            <div>
+              <h3 style="margin:0; font-size:1.05rem; font-weight:700;">Leave Requests</h3>
+            </div>
+          </div>
+
+          <div class="data-table-wrap">
+            <table class="data-table" id="leaveTable">
+              <thead>
+                <tr>
+                  <th>NAME</th>
+                  <th>EMAIL</th>
+                  <th>COURSE</th>
+                  <th>LEAVE TYPE</th>
+                  <th>FROM DATE</th>
+                  <th>TO DATE</th>
+                  <th>DAYS</th>
+                  <th>REASON</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="leaveTableBody">
+                <tr class="empty-row"><td colspan="10">Loading leave requests…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-row" id="leavePager"></div>
+        </div>
+      </section>
+
+      <!-- =============== SECTION 7: MY PROJECTS =============== -->
+      <section id="section-projects" class="admin-section">
+        <div class="admin-main-header">
+          <div>
+            <h2>Project Management</h2>
+            <p>Review automatically assigned projects and manage student submissions.</p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <input type="text" id="projectSearch" class="search-input" placeholder="Search by name, student ID or project title…">
+          </div>
+        </div>
+
+        <div class="filter-row">
+          <button class="filter-chip active" data-project-filter="">All</button>
+          <button class="filter-chip" data-project-filter="NOT_STARTED">Not Started</button>
+          <button class="filter-chip" data-project-filter="IN_PROGRESS">In Progress</button>
+          <button class="filter-chip" data-project-filter="SUBMITTED">Submitted</button>
+          <button class="filter-chip" data-project-filter="UNDER_REVIEW">Under Review</button>
+          <button class="filter-chip" data-project-filter="APPROVED">Approved</button>
+          <button class="filter-chip" data-project-filter="REVISION_REQUIRED">Revision Required</button>
+        </div>
+
+        <div class="data-table-wrap">
+          <table class="data-table" id="projectsTable">
+            <thead>
+              <tr><th>Student</th><th>Title</th><th>Due Date</th><th>Progress</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr class="empty-row"><td colspan="6">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination-row" id="projectsPager"></div>
+      </section>
+
+      <!-- =============== SECTION 8: NOTIFICATIONS =============== -->
+      <section id="section-notifications" class="admin-section">
+        <div class="admin-main-header">
+          <div>
+            <h2>Notifications</h2>
+            <p>Stay updated with important activities and requests.</p>
+          </div>
+          <div class="header-dropdown-wrap">
+            <div class="date-range-badge">
+              <span>📅</span>
+              <span id="notifDateRangeLabel">18 Sep 2026 - 18 Sep 2026</span>
+              <select id="notifPeriodSelect" class="badge-select">
+                <option value="today">18 Sep 2026 - 18 Sep 2026</option>
+                <option value="this_week">This Week</option>
+                <option value="this_month">This Month</option>
+                <option value="all">All Time</option>
+              </select>
+              <span>▾</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="metric-cards-grid">
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-bell">🔔</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Total Notifications</span>
+              <div class="metric-value" id="notifKpiTotal">48</div>
+              <div class="metric-trend positive">↑ +12% <span class="trend-sub">vs last week</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-unread">🟢</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Unread</span>
+              <div class="metric-value" id="notifKpiUnread">12</div>
+              <div class="metric-trend negative">↑ +33% <span class="trend-sub">vs last week</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-leave-notif">✉️</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">Leave Requests</span>
+              <div class="metric-value" id="notifKpiLeave">8</div>
+              <div class="metric-trend positive">↑ +14% <span class="trend-sub">vs last week</span></div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-card-left">
+              <div class="metric-icon icon-system-alert">👤</div>
+            </div>
+            <div class="metric-card-right">
+              <span class="metric-label">System Alerts</span>
+              <div class="metric-value" id="notifKpiSystem">5</div>
+              <div class="metric-trend neutral">↑ +0% <span class="trend-sub">vs last week</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Tabs and Search -->
+        <div class="notif-controls-row">
+          <div class="notif-filter-tabs" id="notifCategoryTabs">
+            <button type="button" class="notif-filter-tab active" data-tab="ALL">All</button>
+            <button type="button" class="notif-filter-tab" data-tab="LEAVE_REQUEST">Leave Requests <span class="tab-chip chip-red" id="tabCountLeave">8</span></button>
+            <button type="button" class="notif-filter-tab" data-tab="REGISTRATION">New Registrations <span class="tab-chip chip-blue" id="tabCountReg">10</span></button>
+            <button type="button" class="notif-filter-tab" data-tab="ATTENDANCE">Attendance <span class="tab-chip chip-red" id="tabCountAtt">6</span></button>
+            <button type="button" class="notif-filter-tab" data-tab="CERTIFICATE">Certificates <span class="tab-chip chip-red" id="tabCountCert">4</span></button>
+            <button type="button" class="notif-filter-tab" data-tab="SYSTEM">System Alerts <span class="tab-chip chip-red" id="tabCountSys">5</span></button>
+          </div>
+          <div class="table-search-wrap notif-search-wrap">
+            <span class="search-lens">🔍</span>
+            <input type="text" id="adminNotifSearch" class="search-input" placeholder="Search notifications...">
+          </div>
+        </div>
+
+        <!-- Two Column Layout: Main (70%) + Sidebar (30%) -->
+        <div class="notif-layout-row">
+          <div class="notif-layout-main">
+            <div class="notif-table-card">
+              <div class="notif-table-header">
+                <span class="col-notif-title">NOTIFICATION</span>
+                <span class="col-notif-type">TYPE</span>
+                <span class="col-notif-time">DATE &amp; TIME</span>
+                <span class="col-notif-act">ACTION</span>
+              </div>
+              <div class="notif-items-list" id="adminNotifList">
+                <div class="empty-row-padded">Loading notifications…</div>
+              </div>
+            </div>
+            <div class="pagination-row" id="adminNotifPager"></div>
+          </div>
+
+          <div class="notif-layout-side">
+            <!-- Quick Actions -->
+            <div class="side-action-card">
+              <h4>Quick Actions</h4>
+              <div class="quick-action-tiles">
+                <button type="button" class="action-tile-btn" id="notifMarkAllReadBtn">
+                  <div class="action-tile-icon icon-mail">✉️</div>
+                  <span>Mark All as Read</span>
+                </button>
+                <button type="button" class="action-tile-btn" id="notifClearAllBtn">
+                  <div class="action-tile-icon icon-trash">🗑️</div>
+                  <span>Clear All</span>
+                </button>
+                <button type="button" class="action-tile-btn" id="notifSettingsBtn">
+                  <div class="action-tile-icon icon-gear">⚙️</div>
+                  <span>Notification Settings</span>
+                </button>
+                <button type="button" class="action-tile-btn" id="notifManagePrefBtn">
+                  <div class="action-tile-icon icon-bell-sm">🔔</div>
+                  <span>Manage Preferences</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Recent Unread -->
+            <div class="side-action-card">
+              <div class="side-card-title-row">
+                <h4>Recent Unread</h4>
+                <button type="button" class="link-btn-danger" id="viewAllUnreadBtn">View All</button>
+              </div>
+              <div class="recent-unread-container" id="recentUnreadList">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- Stay Informed -->
+            <div class="stay-informed-banner">
+              <div class="stay-informed-bell">🔔</div>
+              <div>
+                <h5>Stay Informed</h5>
+                <p>Get real-time updates on important activities, requests and announcements.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      <!-- =============== SECTION 10: REFERRALS =============== -->
+      <section id="section-referrals" class="admin-section">
+        <div class="admin-main-header">
+          <div>
+            <h2>Referral Activity</h2>
+            <p>Every referral code used at registration, and who referred whom.</p>
+          </div>
+          <input type="text" id="referralSearch" class="search-input" placeholder="Search by name, student ID or code…">
+        </div>
+
+        <div class="data-table-wrap">
+          <table class="data-table" id="adminReferralsTable">
+            <thead>
+              <tr><th>Referring Student</th><th>Referral Code</th><th>Referred Student</th><th>Status</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+              <tr class="empty-row"><td colspan="5">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination-row" id="referralsPager"></div>
+      </section>
+
+      <!-- =============== NEW: JOB UPDATES (isolated module) =============== -->
+      <section id="section-job-updates" class="admin-section job-updates-page">
+        <div class="admin-main-header">
+          <div>
+            <h2>Job Updates</h2>
+            <p>Post and manage job opportunities for students.</p>
+          </div>
+          <button type="button" class="btn btn-primary" id="openAddJobUpdateBtn">+ Add Job Update</button>
+        </div>
+
+        <div class="data-table-wrap">
+          <table class="data-table" id="adminJobUpdatesTable">
+            <thead>
+              <tr><th>Job Title</th><th>Company</th><th>Designation</th><th>Department</th><th>Experience</th><th>Location</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr class="empty-row"><td colspan="8">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =============== NEW: ADD / EDIT JOB UPDATE MODAL =============== -->
+      <div class="modal-overlay" id="jobUpdateModal" style="display:none;">
+        <div class="modal-box job-update-form" role="dialog" aria-modal="true" aria-labelledby="jobUpdateModalTitle">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <h3 id="jobUpdateModalTitle">Add Job Update</h3>
+            <button type="button" class="link-btn" id="closeJobUpdateModalBtn" aria-label="Close">✕</button>
+          </div>
+
+          <form id="jobUpdateForm" novalidate>
+            <input type="hidden" id="jobUpdateId">
+            <p id="jobUpdateFormError" class="form-error"></p>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="jobUpdateTitle">Job Title *</label>
+                <input type="text" id="jobUpdateTitle" required>
+              </div>
+              <div class="field">
+                <label for="jobUpdateCompany">Company Name *</label>
+                <input type="text" id="jobUpdateCompany" required>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="jobUpdateDesignation">Designation *</label>
+                <input type="text" id="jobUpdateDesignation" required>
+              </div>
+              <div class="field">
+                <label for="jobUpdateDepartment">Department *</label>
+                <select id="jobUpdateDepartment" required>
+                  <option value="">Select department</option>
+                  <option value="All Departments">All Departments</option>
+                  <option value="Mechanical CAD">Mechanical CAD</option>
+                  <option value="Civil CAD">Civil CAD</option>
+                  <option value="Electronics CAD">Electronics CAD</option>
+                  <option value="Electrical CAD">Electrical CAD</option>
+                  <option value="Arts and Multimedia">Arts and Multimedia</option>
+                  <option value="Computer Science / IT">Computer Science / IT</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="jobUpdateSkills">Software Skills</label>
+                <input type="text" id="jobUpdateSkills" placeholder="e.g. Creo, SolidWorks, AutoCAD">
+              </div>
+              <div class="field">
+                <label for="jobUpdateExperience">Experience</label>
+                <input type="text" id="jobUpdateExperience" placeholder="e.g. 0 to 3 yrs">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="jobUpdateLocation">Location</label>
+              <input type="text" id="jobUpdateLocation">
+            </div>
+
+            <div class="field">
+              <label for="jobUpdateDescription">Job Description</label>
+              <textarea id="jobUpdateDescription" rows="3"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="jobUpdateEligibility">Eligibility / Requirements</label>
+              <textarea id="jobUpdateEligibility" rows="3"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="jobUpdateInstructions">Application Instructions</label>
+              <textarea id="jobUpdateInstructions" rows="2"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="jobUpdateLink">Application Link (optional)</label>
+              <input type="text" id="jobUpdateLink" placeholder="https://...">
+            </div>
+
+            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+              <button type="button" class="btn btn-outline" id="cancelJobUpdateBtn">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="publishJobUpdateBtn">Publish Job</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- =============== NEW: MEETING UPDATES (isolated module, Admin only) =============== -->
+      <section id="section-meeting-updates" class="admin-section meeting-updates-page">
+        <div class="admin-main-header">
+          <div>
+            <h2>Meeting Updates</h2>
+            <p>Manage meeting announcements, instructions and shared links for students.</p>
+          </div>
+          <button type="button" class="btn btn-primary" id="openAddMeetingUpdateBtn">+ Add Meeting Update</button>
+        </div>
+
+        <div class="data-table-wrap">
+          <table class="data-table" id="adminMeetingUpdatesTable">
+            <thead>
+              <tr><th>Title</th><th>Date</th><th>Time</th><th>Meeting Link</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr class="empty-row"><td colspan="6">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =============== NEW: ADD / EDIT MEETING UPDATE MODAL =============== -->
+      <div class="modal-overlay" id="meetingUpdateModal" style="display:none;">
+        <div class="modal-box job-update-form" role="dialog" aria-modal="true" aria-labelledby="meetingUpdateModalTitle">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <h3 id="meetingUpdateModalTitle">Add Meeting Update</h3>
+            <button type="button" class="link-btn" id="closeMeetingUpdateModalBtn" aria-label="Close">✕</button>
+          </div>
+
+          <form id="meetingUpdateForm" novalidate>
+            <input type="hidden" id="meetingUpdateId">
+            <p id="meetingUpdateFormError" class="form-error"></p>
+
+            <div class="field">
+              <label for="meetingUpdateTitle">Meeting / Announcement Title *</label>
+              <input type="text" id="meetingUpdateTitle" maxlength="200" required>
+            </div>
+
+            <div class="field">
+              <label for="meetingUpdateInstructions">Instructions *</label>
+              <textarea id="meetingUpdateInstructions" rows="4" required></textarea>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="meetingUpdateDate">Date *</label>
+                <input type="date" id="meetingUpdateDate" required>
+              </div>
+              <div class="field">
+                <label for="meetingUpdateTime">Time *</label>
+                <input type="time" id="meetingUpdateTime" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="meetingUpdateLink">Meeting / Shared Link *</label>
+              <input type="url" id="meetingUpdateLink" maxlength="1000" placeholder="https://meet.google.com/..., https://zoom.us/..., https://teams.microsoft.com/..." required>
+            </div>
+
+            <div class="field">
+              <label for="meetingUpdateNotes">Important Notes (optional)</label>
+              <textarea id="meetingUpdateNotes" rows="3"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="meetingUpdateStatus">Status *</label>
+              <select id="meetingUpdateStatus" required>
+                <option value="">Select status</option>
+                <option value="NEW">NEW</option>
+                <option value="RECENT">RECENT</option>
+              </select>
+            </div>
+
+            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+              <button type="button" class="btn btn-outline" id="cancelMeetingUpdateBtn">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="saveMeetingUpdateBtn">Save / Publish Meeting Update</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- =============== NEW: VIEW MEETING UPDATE MODAL =============== -->
+      <div class="modal-overlay" id="meetingUpdateViewModal" style="display:none;">
+        <div class="modal-box job-update-form" role="dialog" aria-modal="true" aria-labelledby="meetingUpdateViewTitle">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <h3 id="meetingUpdateViewTitle">Meeting Update</h3>
+            <button type="button" class="link-btn" id="closeMeetingUpdateViewBtn" aria-label="Close">✕</button>
+          </div>
+          <div id="meetingUpdateViewBody"></div>
+          <div style="display:flex; justify-content:flex-end; margin-top:14px;">
+            <button type="button" class="btn btn-outline" id="meetingUpdateViewDoneBtn">Close</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============== NEW: DELETE MEETING UPDATE CONFIRMATION =============== -->
+      <div class="modal-overlay" id="meetingUpdateDeleteModal" style="display:none;">
+        <div class="modal-box" role="alertdialog" aria-modal="true" aria-labelledby="meetingUpdateDeleteTitle">
+          <h3 id="meetingUpdateDeleteTitle">Delete Meeting Update?</h3>
+          <p>Are you sure you want to delete this meeting update?</p>
+          <p id="meetingUpdateDeleteName" style="font-weight:700; color:var(--ink);"></p>
+          <p id="meetingUpdateDeleteError" class="form-error"></p>
+          <div style="display:flex; gap:10px;">
+            <button type="button" class="btn btn-outline" id="cancelDeleteMeetingUpdateBtn">Cancel</button>
+            <button type="button" class="btn btn-danger" id="confirmDeleteMeetingUpdateBtn">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============== SECTION 11: TRAINERS =============== -->
+      <section id="section-trainers" class="admin-section">
+        <div class="admin-main-header">
+          <div>
+            <h2>HOD's</h2>
+            <p>HOD accounts and module access permissions.</p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+            <input type="text" id="trainerSearch" class="search-input" placeholder="Search by name or login ID…">
+            <button type="button" class="btn btn-primary" id="openCreateTrainerBtn" title="Create HOD" aria-haspopup="dialog" aria-controls="createTrainerModal">+ HOD</button>
+          </div>
+        </div>
+
+        <div class="data-table-wrap">
+          <table class="data-table" id="trainersTable">
+            <thead>
+              <tr>
+                <th>HOD Name</th><th>HOD Login ID</th><th>Department</th><th>Assigned Access</th><th>Status</th><th>Created</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="empty-row"><td colspan="7">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =============== SECTION 12: NO ACCESS NOTICE (Trainer only, when 0 permissions) =============== -->
+      <section id="section-no-access" class="admin-section">
+        <div class="panel-card" style="text-align:center; padding:48px 24px; margin-top:20px;">
+          <div style="font-size:3rem; margin-bottom:12px;">🔒</div>
+          <h3 style="margin:0 0 8px;">No Module Access Assigned</h3>
+          <p style="color:var(--ink-soft); max-width:460px; margin:0 auto; font-size:.92rem; line-height:1.6;">Your HOD account does not have access to any modules yet. Please ask the administrator to assign permissions to your account.</p>
+        </div>
+      </section>
+
+      <!-- =============== CREATE TRAINER MODAL =============== -->
+      <div class="modal-overlay" id="createTrainerModal" style="display:none;">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="createTrainerModalTitle">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <h3 id="createTrainerModalTitle">Create HOD</h3>
+            <button type="button" class="link-btn" id="closeCreateTrainerBtn" aria-label="Close">✕</button>
+          </div>
+
+          <form id="createTrainerForm">
+            <div class="field">
+              <label for="trainerNameInput">HOD Name</label>
+              <input type="text" id="trainerNameInput" placeholder="Full name" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="trainerDepartmentInput">Department</label>
+              <select id="trainerDepartmentInput" required>
+                <option value="">Select Department</option>
+                <option value="Mechanical CAD">Mechanical CAD</option>
+                <option value="Civil CAD">Civil CAD</option>
+                <option value="Electronics CAD">Electronics CAD</option>
+                <option value="Electrical CAD">Electrical CAD</option>
+                <option value="Arts and Multimedia">Arts and Multimedia</option>
+                <option value="Computer Science / IT">Computer Science / IT</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="trainerPasswordInput">Password</label>
+              <div class="password-field-wrap">
+                <input type="password" id="trainerPasswordInput" placeholder="At least 6 characters" autocomplete="new-password">
+                <button type="button" class="show-toggle" data-toggle-for="trainerPasswordInput">Show</button>
+              </div>
+            </div>
+            <div class="field">
+              <label for="trainerConfirmPasswordInput">Confirm Password</label>
+              <div class="password-field-wrap">
+                <input type="password" id="trainerConfirmPasswordInput" placeholder="Re-enter password" autocomplete="new-password">
+                <button type="button" class="show-toggle" data-toggle-for="trainerConfirmPasswordInput">Show</button>
+              </div>
+            </div>
+            <p id="createTrainerError" class="form-error"></p>
+            <button type="submit" class="btn btn-primary" id="createTrainerBtn">Create HOD</button>
+          </form>
+
+          <div id="createTrainerSuccess" class="panel-card" style="display:none; margin-top:16px;">
+            <p style="margin:0 0 8px;"><b>HOD Created Successfully</b></p>
+            <p style="margin:0;">HOD Name: <b id="createdTrainerName"></b><br>Login ID: <b id="createdTrainerUsername"></b></p>
+            <p style="margin:8px 0 0; color:var(--ink-soft); font-size:.82rem;">Share this login ID with the HOD now — it will not be shown again here. They sign in at the same Admin login page.</p>
+            <div style="display:flex; gap:10px; margin-top:14px;">
+              <button type="button" class="btn btn-primary btn-sm" id="createdTrainerAssignAccessBtn">Assign Access Now</button>
+              <button type="button" class="btn btn-outline btn-sm" id="createTrainerDoneBtn">Done</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============== MANAGE TRAINER ACCESS / PERMISSIONS MODAL =============== -->
+      <div class="modal-overlay" id="trainerPermissionsModal" style="display:none;">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="trainerPermissionsModalTitle" style="max-width:580px; width:100%;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+            <div>
+              <h3 id="trainerPermissionsModalTitle" style="margin:0;">Assign Module Access</h3>
+              <p style="margin:4px 0 0; color:var(--ink-soft); font-size:.84rem;">Select the allowed modules for <b id="permTrainerName">HOD</b></p>
+            </div>
+            <button type="button" class="link-btn" id="closeTrainerPermissionsBtn" aria-label="Close" style="font-size:1.2rem;">✕</button>
+          </div>
+
+          <div class="field" style="margin-bottom:14px;">
+            <label for="permTrainerDepartment">Department <span style="font-weight:400; color:var(--ink-soft);">(data scope)</span></label>
+            <select id="permTrainerDepartment">
+              <option value="">Select Department</option>
+                <option value="Mechanical CAD">Mechanical CAD</option>
+                <option value="Civil CAD">Civil CAD</option>
+                <option value="Electronics CAD">Electronics CAD</option>
+                <option value="Electrical CAD">Electrical CAD</option>
+                <option value="Arts and Multimedia">Arts and Multimedia</option>
+                <option value="Computer Science / IT">Computer Science / IT</option>
+            </select>
+          </div>
+
+          <div style="display:flex; gap:10px; margin-bottom:14px; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); padding-bottom:10px;">
+            <span style="font-size:.8rem; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em;">Available Modules</span>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="btn btn-outline btn-sm" id="permSelectAllBtn">Select All</button>
+              <button type="button" class="btn btn-outline btn-sm" id="permClearAllBtn">Clear All</button>
+            </div>
+          </div>
+
+          <div class="perm-options-grid" id="permissionsCheckboxList" style="max-height:360px; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-right:4px;">
+            <!-- Options dynamically populated by JS -->
+          </div>
+
+          <p id="trainerPermissionsError" class="form-error" style="margin-top:12px;"></p>
+
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+            <button type="button" class="btn btn-outline" id="cancelTrainerPermissionsBtn">Cancel</button>
+            <button type="button" class="btn btn-primary" id="saveTrainerPermissionsBtn">Save Access</button>
+          </div>
+        </div>
+      </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Delete Staff confirmation modal (Trainers - NEW, isolated). Reuses
+       the existing .modal-overlay/.modal-box/.btn classes exactly as-is;
+       only new, scoped ids/classes were added (delete-staff-*). -->
+  <div id="deleteStaffModalOverlay" class="modal-overlay" style="display:none;">
+    <div class="modal-box delete-staff-modal">
+      <h3>Delete Staff?</h3>
+      <p style="color:var(--ink-soft); font-size:.88rem; margin:0 0 16px;">Are you sure you want to permanently delete this staff account? This action cannot be undone.</p>
+      <div class="detail-row"><span>Name</span><span id="deleteStaffName">-</span></div>
+      <div class="detail-row"><span>Login ID</span><span id="deleteStaffLoginId">-</span></div>
+      <p id="deleteStaffError" class="form-error" style="margin-top:12px;"></p>
+      <div style="display:flex; gap:10px; margin-top:16px;">
+        <button type="button" id="deleteStaffCancelBtn" class="btn btn-outline">Cancel</button>
+        <button type="button" id="deleteStaffConfirmBtn" class="btn btn-primary delete-staff-confirm">Delete Staff</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reject-reason modal (Leave Management) -->
+  <div id="rejectModalOverlay" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <h3>Reject Leave Request</h3>
+      <p style="color:var(--ink-soft); font-size:.88rem; margin:0 0 16px;">Let the student know why this request is being rejected. This is required.</p>
+      <textarea id="rejectReasonInput" rows="3"
+        style="width:100%; font-family:inherit; font-size:.92rem; padding:12px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--line); resize:vertical; margin-bottom:16px;"
+        placeholder="e.g. Leave period conflicts with scheduled training."></textarea>
+      <p id="rejectModalError" class="form-error"></p>
+      <div style="display:flex; gap:10px;">
+        <button type="button" id="rejectCancelBtn" class="btn btn-outline">Cancel</button>
+        <button type="button" id="rejectConfirmBtn" class="btn btn-primary">Confirm Reject</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Project modal (My Projects) -->
+  <div id="reviewProjectModalOverlay" class="modal-overlay" style="display:none;">
+    <div class="modal-box">
+      <h3>Review Submission</h3>
+      <p style="color:var(--ink-soft); font-size:.88rem; margin:0 0 16px;">Approve this project or send it back for revision.</p>
+      <div class="field">
+        <label for="reviewDecisionSelect">Decision</label>
+        <select id="reviewDecisionSelect">
+          <option value="APPROVED">Approve</option>
+          <option value="REVISION_REQUIRED">Request Revision</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="reviewFeedbackInput">Feedback to Student</label>
+        <textarea id="reviewFeedbackInput" rows="3"
+          style="width:100%; font-family:inherit; font-size:.92rem; padding:12px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--line); resize:vertical;"
+          placeholder="Notes for the student"></textarea>
+      </div>
+      <p id="reviewProjectModalError" class="form-error"></p>
+      <div style="display:flex; gap:10px;">
+        <button type="button" id="reviewProjectCancelBtn" class="btn btn-outline">Cancel</button>
+        <button type="button" id="reviewProjectConfirmBtn" class="btn btn-primary">Submit Review</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============== TODAY LOGINS: STUDENTS POPUP =============== -->
+  <div id="todayLoginsModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box today-logins-modal-box" role="dialog" aria-modal="true" aria-labelledby="todayLoginsModalTitle">
+      <div class="modal-header-with-close">
+        <h3 id="todayLoginsModalTitle" style="margin:0;">Today Logins</h3>
+        <button type="button" class="modal-close-btn" id="todayLoginsModalClose" aria-label="Close">✕</button>
+      </div>
+      <div id="todayLoginsModalBody" class="today-logins-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- =============== STUDENT 360° PROFILE MODAL =============== -->
+  <div id="studentDetailsModal" class="modal-overlay" style="display:none;">
+    <div class="modal-box student-360-modal-box" role="dialog" aria-modal="true" aria-labelledby="student360ModalTitle" style="max-width:780px; width:100%; max-height:90vh; overflow-y:auto;">
+      <div class="student-360-header">
+        <div class="student-360-identity">
+          <div class="student-360-photo-wrap" id="s360PhotoWrap">
+            <img id="s360PhotoImg" class="student-360-photo-img" src="" alt="Photo" style="display:none;">
+            <div class="student-360-photo-fallback" id="s360Avatar">P</div>
+          </div>
+          <div class="student-360-name-block">
+            <h3 id="s360Name">Student Name</h3>
+            <div class="student-360-tags">
+              <span class="student-id-tag" id="s360Id">PFT-000</span>
+              <span class="admin-branch-badge" id="s360BranchTag">Branch: Kinathukadavu</span>
+              <span class="student-dept-tag" id="s360Course">Department</span>
+              <span class="pill pill-pending" id="s360CertStatus">Pending</span>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="link-btn" id="closeStudentDetailsBtn" aria-label="Close" style="font-size:1.3rem; padding:4px;">✕</button>
+      </div>
+
+      <!-- Top 4 Quick KPI Badges -->
+      <div class="student-360-kpis">
+        <div class="student-360-kpi-item accent-good">
+          <div class="student-360-kpi-label">Attendance %</div>
+          <div class="student-360-kpi-val" id="s360AttPercent">—%</div>
+        </div>
+        <div class="student-360-kpi-item accent-crimson">
+          <div class="student-360-kpi-label">Mock Interview</div>
+          <div class="student-360-kpi-val" id="s360MockScore">— / 20</div>
+        </div>
+        <div class="student-360-kpi-item">
+          <div class="student-360-kpi-label">Projects Approved</div>
+          <div class="student-360-kpi-val" id="s360ProjectsApproved">—</div>
+        </div>
+        <div class="student-360-kpi-item">
+          <div class="student-360-kpi-label">Leave Days</div>
+          <div class="student-360-kpi-val" id="s360LeaveCount">—</div>
+        </div>
+      </div>
+
+      <!-- Profile Information Grid -->
+      <div class="student-360-section">
+        <div class="student-360-section-title">👤 Contact &amp; Registration Info</div>
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Email Address</span><b id="s360Email">-</b></div>
+          <div class="info-item"><span class="info-label">Phone Number</span><b id="s360Phone">-</b></div>
+          <div class="info-item"><span class="info-label">Department</span><b id="s360Department">-</b></div>
+          <div class="info-item"><span class="info-label">Course Specialization</span><b id="s360CourseName">-</b></div>
+          <div class="info-item"><span class="info-label">Branch Center</span><b id="s360Branch">-</b></div>
+          <div class="info-item"><span class="info-label">Date of Join</span><b id="s360JoinDate">-</b></div>
+          <div class="info-item"><span class="info-label">College Name</span><b id="s360CollegeName">-</b></div>
+          <div class="info-item"><span class="info-label">College Start Date</span><b id="s360CollegeStart">-</b></div>
+          <div class="info-item"><span class="info-label">College End Date</span><b id="s360CollegeEnd">-</b></div>
+          <div class="info-item"><span class="info-label">Internship Certificate</span><b id="s360InternshipReq">-</b></div>
+          <div class="info-item"><span class="info-label">Experience Certificate</span><b id="s360ExpReq">-</b></div>
+          <div class="info-item"><span class="info-label">Certificate Status</span><b id="s360CertInfo">-</b></div>
+          <div class="info-item"><span class="info-label">Certificate Issued Date</span><b id="s360CertDate">-</b></div>
+        </div>
+      </div>
+
+      <!-- Attendance Breakdown Section -->
+      <div class="student-360-section">
+        <div class="student-360-section-title">🗓️ Attendance Record</div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+          <span class="status-badge present" id="s360AttPresent">Present: 0</span>
+          <span class="status-badge absent" id="s360AttAbsent">Absent: 0</span>
+          <span class="status-badge leave" id="s360AttLeave">Leave: 0</span>
+          <span class="status-badge not-marked" id="s360AttTotal">Total Marked Days: 0</span>
+        </div>
+        <div id="s360RecentAttList" style="max-height:140px; overflow-y:auto; font-size:.85rem; color:var(--ink-soft);">
+          <!-- Recent attendance list -->
+        </div>
+      </div>
+
+      <!-- Mock Interview & Evaluation Section -->
+      <div class="student-360-section">
+        <div class="student-360-section-title">🎯 Mock Interview &amp; Evaluation</div>
+        <div class="info-grid" id="s360MockGrid">
+          <div class="info-item"><span class="info-label">Status</span><b id="s360MockStatus">Not Attempted</b></div>
+          <div class="info-item"><span class="info-label">Score Percentage</span><b id="s360MockPercent">—</b></div>
+          <div class="info-item"><span class="info-label">Correct Answers</span><b id="s360MockCorrect">—</b></div>
+          <div class="info-item"><span class="info-label">Wrong Answers</span><b id="s360MockWrong">—</b></div>
+        </div>
+      </div>
+
+      <!-- Projects & Practical Submissions Section -->
+      <div class="student-360-section">
+        <div class="student-360-section-title">💻 Practical Projects &amp; Placement Overview</div>
+        <div class="info-grid">
+          <div class="info-item"><span class="info-label">Assigned Projects</span><b id="s360ProjectsTotal">0 Assigned</b></div>
+          <div class="info-item"><span class="info-label">Project Status</span><b id="s360ProjectsStatus">—</b></div>
+          <div class="info-item"><span class="info-label">Resume Uploaded</span><b id="s360ResumeStatus">No</b></div>
+          <div class="info-item"><span class="info-label">Total Applied Companies</span><b id="s360ApplicationsCount">0</b></div>
+        </div>
+      </div>
+
+      <!-- Full Applied Companies Details Table Section -->
+      <div class="student-360-section">
+        <div class="student-360-section-title">🏢 Full Applied Companies &amp; Placement Activity</div>
+        <div class="data-table-wrap" style="margin-top:10px;">
+          <table class="data-table" id="s360CompaniesTable">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Company Name</th>
+                <th>Contact &amp; Email</th>
+                <th>Website / Poster</th>
+                <th>Applied Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="empty-row"><td colspan="5">No company applications recorded.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px;">
+        <button type="button" class="btn btn-outline" id="s360GotoAssignBtn">🎓 Assign / Edit Certificate</button>
+        <button type="button" class="btn btn-primary" id="s360DoneBtn">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/push-notifications.js"></script>
+  <script src="assets/js/admin-dashboard.js"></script>
+</body>
+</html>

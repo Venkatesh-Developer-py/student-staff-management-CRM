@@ -1,0 +1,24 @@
+/* Meeting Updates (admin) - scoped to the Meeting Updates page/modals only.
+   Reuses the existing portal.css design tokens, .data-table, .modal-overlay,
+   .modal-box, .status-badge, .btn and the .job-update-form modal layout. */
+#section-meeting-updates .meeting-link-cell { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#section-meeting-updates .meeting-link-cell a { color: var(--crimson); font-weight: 600; text-decoration: none; }
+#section-meeting-updates .meeting-link-cell a:hover { text-decoration: underline; }
+#section-meeting-updates .meeting-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn.btn-danger-outline { background: #fff; color: var(--bad); border: 1.5px solid var(--bad); }
+.btn.btn-danger-outline:hover { background: var(--bad-tint); }
+.btn.btn-danger { background: var(--bad); color: #fff; border: 1.5px solid var(--bad); }
+.btn.btn-danger:hover { filter: brightness(.92); }
+.btn.btn-danger:disabled, #saveMeetingUpdateBtn:disabled { opacity: .6; cursor: not-allowed; }
+
+/* View modal */
+#meetingUpdateViewModal .mu-view-row { padding: 10px 0; border-bottom: 1px dashed var(--line); }
+#meetingUpdateViewModal .mu-view-row:last-of-type { border-bottom: none; }
+#meetingUpdateViewModal .mu-view-label { display: block; margin-bottom: 3px; font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-soft); }
+#meetingUpdateViewModal .mu-view-value { font-size: .94rem; word-break: break-word; white-space: pre-line; }
+#meetingUpdateViewModal .mu-view-value a { color: var(--crimson); font-weight: 600; }
+#meetingUpdateViewModal .mu-view-split { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 520px) { #meetingUpdateViewModal .mu-view-split { grid-template-columns: 1fr; } }
+
+/* Delete confirmation */
+#meetingUpdateDeleteModal .modal-box p { margin: 0 0 16px; color: var(--ink-soft); font-size: .92rem; }
